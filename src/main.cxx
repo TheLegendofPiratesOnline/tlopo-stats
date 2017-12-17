@@ -1,5 +1,6 @@
 #include "net/jsonUdpReceiver.h"
 #include "event/eventListener.h"
+#include "avatar/avatarManager.h"
 
 class Test : public JSONUDPReceiver {
     public:
@@ -40,6 +41,38 @@ int main(int argc, char** argv)
 
     Test t(io_service, "127.0.0.1");
     TestListener l;
+
+    AvatarManager m;
+    std::cout << m.get_guild_id(1234) << std::endl;
+
+    {
+      Event e;
+      e.type = "AV_GUILD";
+      e.doIds = {1234};
+      e.value = 10000;
+      EventManager::get_global_ptr()->send(e);
+    }
+
+    std::cout << m.get_guild_id(1234) << std::endl;
+
+    {
+      Event e;
+      e.type = "AV_ONLINE";
+      e.doIds = {1234};
+      EventManager::get_global_ptr()->send(e);
+    }
+
+    std::cout << m.get_guild_id(1234) << std::endl;
+
+    {
+      Event e;
+      e.type = "AV_GUILD";
+      e.doIds = {1234};
+      e.value = 10000;
+      EventManager::get_global_ptr()->send(e);
+    }
+
+    std::cout << m.get_guild_id(1234) << std::endl;
 
     io_service.run();
     return 0;

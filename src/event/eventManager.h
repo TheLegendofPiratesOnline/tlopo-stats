@@ -1,5 +1,7 @@
 #pragma once
 
+#include "stats_types.h"
+
 #include <unordered_map>
 #include <functional>
 #include <string>
@@ -10,8 +12,8 @@ class EventListener; // fwd decl
 typedef struct
 {
     std::string type;
-    int doIds[];
-    int value;
+    std::vector<doid_t> doIds;
+    long value;
 } Event;
 
 typedef std::function<void(const Event&)> event_callback_t;
