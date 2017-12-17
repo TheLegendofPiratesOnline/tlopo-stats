@@ -29,6 +29,9 @@ find_package(Boost COMPONENTS system REQUIRED)
 
 set (SRC_FILES
     src/main.cxx
+    src/net/util.cxx
+    src/net/udpReceiver.cxx
+    src/net/jsonUdpReceiver.cxx
 )
 
 include_directories(${MONGO_INCLUDE_DIR})
@@ -36,11 +39,12 @@ include_directories(${JANSSON_INCLUDE_DIR})
 include_directories(${PROJECT_SOURCE_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/src)
 
-add_definitions("-std=c++11 -ggdb")
+add_definitions("-pthread -std=c++11 -ggdb")
 
 add_executable(tlopostats ${SRC_FILES})
 target_link_libraries(tlopostats
-    ${JANSSON_LIBRARIES}
+    pthread
+    ${JANSSON_LIBRARY}
     ${MONGO_LIBRARIES}
     ${Boost_LIBRARIES}
 )
