@@ -35,6 +35,7 @@ set (SRC_FILES
     src/event/eventListener.cxx
     src/event/eventManager.cxx
     src/avatar/avatarManager.cxx
+    src/collector/eventCollector.cxx
 )
 
 include_directories(${MONGO_INCLUDE_DIR})
