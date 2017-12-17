@@ -18,6 +18,10 @@ AvatarManager::AvatarManager()
             m_avatars[avId].guildId = guildId;
         }
     });
+    listen(EVENT_AV_OFFLINE, [this](const Event& e) {
+        doid_t avId = e.doIds[0];
+        m_avatars.erase(avId);
+    });
 }
 
 doid_t AvatarManager::get_guild_id(doid_t avId)

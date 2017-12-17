@@ -74,6 +74,24 @@ int main(int argc, char** argv)
 
     std::cout << m.get_guild_id(1234) << std::endl;
 
+    {
+      Event e;
+      e.type = "AV_OFFLINE";
+      e.doIds = {1234};
+      EventManager::get_global_ptr()->send(e);
+    }
+
+    std::cout << m.get_guild_id(1234) << std::endl;
+
+    {
+      Event e;
+      e.type = "AV_OFFLINE";
+      e.doIds = {1234};
+      EventManager::get_global_ptr()->send(e);
+    }
+
+    std::cout << m.get_guild_id(1234) << std::endl;
+
     io_service.run();
     return 0;
 }
