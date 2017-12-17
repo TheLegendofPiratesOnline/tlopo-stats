@@ -32,6 +32,8 @@ set (SRC_FILES
     src/net/util.cxx
     src/net/udpReceiver.cxx
     src/net/jsonUdpReceiver.cxx
+    src/event/eventListener.cxx
+    src/event/eventManager.cxx
 )
 
 include_directories(${MONGO_INCLUDE_DIR})
