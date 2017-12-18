@@ -10,7 +10,7 @@ Report::~Report()
     m_timer.cancel();
 }
 
-std::string Report::get_db_name()
+std::string Report::get_collection_name()
 {
     // Return m_name by default
     return m_name;

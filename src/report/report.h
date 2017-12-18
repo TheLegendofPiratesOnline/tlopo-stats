@@ -10,7 +10,7 @@ class Report {
         virtual ~Report();
 
         virtual void start() = 0;
-        virtual std::string get_db_name();
+        virtual std::string get_collection_name();
 
     protected:
         std::string m_name;

@@ -10,7 +10,7 @@ class IncrementalPeriodicReport : public Report {
 
         virtual void start();
 
-        virtual std::string get_db_name();
+        virtual std::string get_collection_name();
         void increment(doid_t key, int value);
 
     protected:

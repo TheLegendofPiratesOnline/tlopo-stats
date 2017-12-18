@@ -22,7 +22,7 @@ void IncrementalPeriodicReport::increment(doid_t key, int value)
     // TODO
 }
 
-std::string IncrementalPeriodicReport::get_db_name()
+std::string IncrementalPeriodicReport::get_collection_name()
 {
     return m_name + "_" + m_period_string;
 }
