@@ -4,7 +4,7 @@
 
 class MonthlyReport : public IncrementalPeriodicReport {
     public:
-        MonthlyReport(const std::string& name, boost::asio::io_service& io_service);
+        MonthlyReport(const std::string& name, Database* db, boost::asio::io_service& io_service);
         virtual ~MonthlyReport();
 
     protected:

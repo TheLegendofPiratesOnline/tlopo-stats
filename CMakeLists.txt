@@ -42,6 +42,8 @@ set (SRC_FILES
     src/report/dailyReport.cxx
     src/report/monthlyReport.cxx
     src/report/yearlyReport.cxx
+    src/database/database.cxx
+    src/database/dummyDatabase.cxx
 )
 
 include_directories(${MONGO_INCLUDE_DIR})

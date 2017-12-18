@@ -1,7 +1,8 @@
 #include "report.h"
 
-Report::Report(const std::string& name, boost::asio::io_service& io_service) : m_name(name),
-    m_timer(io_service)
+Report::Report(const std::string& name, Database* db,
+    boost::asio::io_service& io_service) : m_name(name),
+    m_db(db), m_timer(io_service)
 {
 }
 

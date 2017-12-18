@@ -3,7 +3,7 @@
 #include <time.h>
 
 DailyReport::DailyReport(const std::string& name,
-    boost::asio::io_service& io_service) : IncrementalPeriodicReport(name, io_service)
+    Database* db, boost::asio::io_service& io_service) : IncrementalPeriodicReport(name, db, io_service)
 {
 }
 

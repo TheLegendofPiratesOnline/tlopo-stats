@@ -3,7 +3,8 @@
 #include <boost/bind.hpp>
 
 PeriodicReport::PeriodicReport(const std::string& name,
-    unsigned int period, boost::asio::io_service& io_service) : Report(name, io_service),
+    unsigned int period, Database* db,
+    boost::asio::io_service& io_service) : Report(name, db, io_service),
     m_period(period)
 {
 }
@@ -19,7 +20,7 @@ void PeriodicReport::start()
                                     this, boost::asio::placeholders::error));
 }
 
-void PeriodicReport::set(doid_t key, int value)
+void PeriodicReport::set(doid_t key, long value)
 {
     m_data[key] = value;
 }
@@ -29,6 +30,10 @@ void PeriodicReport::save_task(const boost::system::error_code& e)
     if (e == boost::asio::error::operation_aborted)
         return;
 
-    // TODO
+    for (auto& it : m_data)
+    {
+        m_db->add_periodic_report(get_collection_name(), it.first, it.second);
+    }
+
     start();
 }

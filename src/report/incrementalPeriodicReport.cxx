@@ -3,7 +3,7 @@
 #include <boost/bind.hpp>
 
 IncrementalPeriodicReport::IncrementalPeriodicReport(const std::string& name,
-    boost::asio::io_service& io_service) : Report(name, io_service)
+    Database* db, boost::asio::io_service& io_service) : Report(name, db, io_service)
 {
 }
 
@@ -17,9 +17,9 @@ void IncrementalPeriodicReport::start()
     rotate(noerror);
 }
 
-void IncrementalPeriodicReport::increment(doid_t key, int value)
+void IncrementalPeriodicReport::increment(doid_t key, long value)
 {
-    // TODO
+    m_db->add_incremental_report(get_collection_name(), key, value);
 }
 
 std::string IncrementalPeriodicReport::get_collection_name()

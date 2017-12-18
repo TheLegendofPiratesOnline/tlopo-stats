@@ -2,20 +2,22 @@
 #include "event/eventListener.h"
 #include "avatar/avatarManager.h"
 
+#include "database/dummyDatabase.h"
 #include "report/dailyReport.h"
-#include "report/monthlyReport.h"
-#include "report/yearlyReport.h"
-#include "report/periodicReport.h"
+
+static DailyReport* g_report = nullptr;
 
 class TestListener : public EventListener
 {
     public:
-        TestListener(AvatarManager* m)
+        TestListener()
         {
-            listen("QUERY", [this, m](const Event& e)
+            listen("REPORT", [](const Event& e)
             {
-                std::cout << e.doIds[0] << ": " << m->get_guild_id(e.doIds[0]) << std::endl;
-                std::cout << std::endl;
+                doid_t avId = e.doIds[0];
+                long value = e.value;
+
+                g_report->increment(avId, value);
             });
         }
 };
@@ -27,27 +29,14 @@ int main(int argc, char** argv)
     AvatarManager m;
 
     EventCollector evcoll(io_service, "127.0.0.1");
-    TestListener l(&m);
+    TestListener l;
+
+    DummyDatabase db;
 
     {
-      Report* r = new DailyReport ("test", io_service);
-      r->start();
-      std::cout << r->get_db_name() << std::endl;
-    }
-    {
-      Report* r = new MonthlyReport ("test", io_service);
-      r->start();
-      std::cout << r->get_db_name() << std::endl;
-    }
-    {
-      Report* r = new YearlyReport ("test", io_service);
-      r->start();
-      std::cout << r->get_db_name() << std::endl;
-    }
-    {
-      Report* r = new PeriodicReport ("periodic", 5, io_service);
-      r->start();
-      std::cout << r->get_db_name() << std::endl;
+      g_report = new DailyReport ("test", &db, io_service);
+      g_report->start();
+      std::cout << g_report->get_collection_name() << std::endl;
     }
 
     io_service.run();

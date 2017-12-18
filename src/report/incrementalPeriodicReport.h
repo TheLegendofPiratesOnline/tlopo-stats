@@ -5,13 +5,14 @@
 
 class IncrementalPeriodicReport : public Report {
     public:
-        IncrementalPeriodicReport(const std::string& name, boost::asio::io_service& io_service);
+        IncrementalPeriodicReport(const std::string& name, Database* db,
+                                  boost::asio::io_service& io_service);
         virtual ~IncrementalPeriodicReport();
 
         virtual void start();
 
         virtual std::string get_collection_name();
-        void increment(doid_t key, int value);
+        void increment(doid_t key, long value);
 
     protected:
         virtual unsigned int time_until_next_task() = 0;

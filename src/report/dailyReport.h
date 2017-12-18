@@ -4,7 +4,7 @@
 
 class DailyReport : public IncrementalPeriodicReport {
     public:
-        DailyReport(const std::string& name, boost::asio::io_service& io_service);
+        DailyReport(const std::string& name, Database* db, boost::asio::io_service& io_service);
         virtual ~DailyReport();
 
     protected:
