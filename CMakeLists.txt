@@ -36,6 +36,12 @@ set (SRC_FILES
     src/event/eventManager.cxx
     src/avatar/avatarManager.cxx
     src/collector/eventCollector.cxx
+    src/report/report.cxx
+    src/report/periodicReport.cxx
+    src/report/incrementalPeriodicReport.cxx
+    src/report/dailyReport.cxx
+    src/report/monthlyReport.cxx
+    src/report/yearlyReport.cxx
 )
 
 include_directories(${MONGO_INCLUDE_DIR})
