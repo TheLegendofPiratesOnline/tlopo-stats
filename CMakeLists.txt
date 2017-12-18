@@ -36,6 +36,9 @@ set (SRC_FILES
     src/event/eventManager.cxx
     src/avatar/avatarManager.cxx
     src/collector/eventCollector.cxx
+    src/collector/statCollectorBase.cxx
+    src/collector/statCollector.cxx
+    src/collector/incrementalStatCollector.cxx
     src/report/report.cxx
     src/report/periodicReport.cxx
     src/report/incrementalPeriodicReport.cxx

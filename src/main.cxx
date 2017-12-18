@@ -3,6 +3,8 @@
 #include "avatar/avatarManager.h"
 
 #include "database/dummyDatabase.h"
+#include "collector/statCollector.h"
+#include "collector/incrementalStatCollector.h"
 #include "report/dailyReport.h"
 
 static DailyReport* g_report = nullptr;
@@ -38,6 +40,12 @@ int main(int argc, char** argv)
       g_report->start();
       std::cout << g_report->get_collection_name() << std::endl;
     }
+
+    StatCollector coll("Pstat", "STAT",  &db, 10, io_service);
+    coll.start();
+
+    IncrementalStatCollector coll2("Istat", "STAT2", &db, io_service);
+    coll2.start();
 
     io_service.run();
     return 0;
