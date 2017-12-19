@@ -45,6 +45,7 @@ set (SRC_FILES
     src/report/dailyReport.cxx
     src/report/monthlyReport.cxx
     src/report/yearlyReport.cxx
+    src/database/cache.cxx
     src/database/database.cxx
     src/database/dummyDatabase.cxx
 )

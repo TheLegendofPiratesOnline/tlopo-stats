@@ -1,14 +1,8 @@
 #pragma once
 
 #include "event/eventListener.h"
+#include "database/cache.h"
 #include "stats_types.h"
-
-#include <unordered_map>
-
-typedef struct {
-  doid_t avId;
-  doid_t guildId;
-} Avatar;
 
 class AvatarManager : private EventListener {
     public:
@@ -22,5 +16,5 @@ class AvatarManager : private EventListener {
 
     private:
         AvatarManager();
-        std::unordered_map<doid_t, Avatar> m_avatars;
+        CachedDoIdMap m_guild_ids;
 };
