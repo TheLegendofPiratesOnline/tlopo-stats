@@ -28,7 +28,7 @@ int main(int argc, char** argv)
 {
     boost::asio::io_service io_service;
 
-    AvatarManager m;
+    AvatarManager::get_global_ptr()->start();
 
     EventCollector evcoll(io_service, "127.0.0.1");
     TestListener l;

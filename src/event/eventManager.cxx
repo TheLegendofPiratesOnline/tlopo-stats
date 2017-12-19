@@ -1,6 +1,10 @@
 #include "eventManager.h"
 #include "eventListener.h"
 
+EventManager::EventManager()
+{
+}
+
 void EventManager::send(const Event& event)
 {
     std::vector<event_callback_t> callbacks;

@@ -4,6 +4,10 @@
 
 AvatarManager::AvatarManager()
 {
+}
+
+void AvatarManager::start()
+{
     listen(EVENT_AV_ONLINE, [this](const Event& e) {
         doid_t avId = e.doIds[0];
         Avatar av;
