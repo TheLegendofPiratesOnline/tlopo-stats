@@ -17,9 +17,17 @@ void IncrementalPeriodicReport::start()
     rotate(noerror);
 }
 
+void IncrementalPeriodicReport::flush()
+{
+    for (auto& it : m_temp_cache)
+        m_db->add_incremental_report(get_collection_name(), it.first, it.second);
+
+      m_temp_cache.clear();
+}
+
 void IncrementalPeriodicReport::increment(doid_t key, long value)
 {
-    m_db->add_incremental_report(get_collection_name(), key, value);
+    m_temp_cache[key] += value;
 }
 
 std::string IncrementalPeriodicReport::get_collection_name()

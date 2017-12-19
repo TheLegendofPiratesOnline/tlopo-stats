@@ -3,6 +3,8 @@
 #include "report.h"
 #include "stats_types.h"
 
+#include <unordered_map>
+
 class IncrementalPeriodicReport : public Report {
     public:
         IncrementalPeriodicReport(const std::string& name, Database* db,
@@ -13,6 +15,7 @@ class IncrementalPeriodicReport : public Report {
 
         virtual std::string get_collection_name();
         void increment(doid_t key, long value);
+        void flush();
 
     protected:
         virtual unsigned int time_until_next_task() = 0;
@@ -22,4 +25,6 @@ class IncrementalPeriodicReport : public Report {
 
     private:
         void rotate(const boost::system::error_code& e);
+
+        std::unordered_map<doid_t, long> m_temp_cache;
 };

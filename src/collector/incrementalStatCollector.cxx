@@ -45,4 +45,10 @@ void IncrementalStatCollector::callback(const Event& e)
             }
         }
     }
+
+    for (auto& it : m_reports)
+    {
+        IncrementalPeriodicReport* report = (IncrementalPeriodicReport*)it;
+        report->flush();
+    }
 }
