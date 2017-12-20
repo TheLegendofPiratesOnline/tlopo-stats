@@ -7,11 +7,11 @@ class StatCollectorManager final {
     public:
         StatCollectorManager(Database* db, boost::asio::io_service& io_service);
 
-        void add_incremental_collector(const std::string& name, const std::string& event);
-        void add_periodic_collector(const std::string& name, const std::string& event,
+        bool add_incremental_collector(const std::string& name, const std::string& event);
+        bool add_periodic_collector(const std::string& name, const std::string& event,
                                     unsigned int period);
 
-        void remove_collector(const std::string& name);
+        bool remove_collector(const std::string& name);
 
     private:
         Database* m_db;

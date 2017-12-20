@@ -32,7 +32,7 @@ void IncrementalPeriodicReport::increment(doid_t key, long value)
 
 std::string IncrementalPeriodicReport::get_collection_name()
 {
-    return m_name + "_" + m_period_string;
+    return m_name + "." + m_period_string;
 }
 
 void IncrementalPeriodicReport::rotate(const boost::system::error_code& e)

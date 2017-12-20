@@ -2,6 +2,7 @@
 #include "event/eventListener.h"
 #include "avatar/avatarManager.h"
 
+#include "database/mongoDatabase.h"
 #include "database/dummyDatabase.h"
 #include "collector/statCollectorManager.h"
 
@@ -28,7 +29,8 @@ int main(int argc, char** argv)
     EventCollector evcoll(io_service, "127.0.0.1");
     TestListener l;
 
-    DummyDatabase db;
+    MongoDatabase db("mongodb://localhost:27017/tlopo_stats");
+    DummyDatabase dbX;
 
     g_mgr = new StatCollectorManager(&db, io_service);
     g_mgr->add_incremental_collector("enemies_killed", "ENEMY_KILLED");

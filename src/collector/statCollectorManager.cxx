@@ -10,29 +10,38 @@ StatCollectorManager::StatCollectorManager(Database* db, boost::asio::io_service
 
 }
 
-void StatCollectorManager::add_incremental_collector(const std::string& name,
+bool StatCollectorManager::add_incremental_collector(const std::string& name,
                                                      const std::string& event)
 {
+    if (m_collectors.has_key(name))
+        return false;
+
     auto collector = new IncrementalStatCollector(name, event, m_db, m_io_service);
     collector->start();
     m_collectors.set(name, collector);
+    return true;
 }
 
-void StatCollectorManager::add_periodic_collector(const std::string& name,
+bool StatCollectorManager::add_periodic_collector(const std::string& name,
                                                   const std::string& event,
                                                   unsigned int period)
 {
+    if (m_collectors.has_key(name))
+        return false;
+
     auto collector = new StatCollector(name, event, m_db, period, m_io_service);
     collector->start();
     m_collectors.set(name, collector);
+    return true;
 }
 
-void StatCollectorManager::remove_collector(const std::string& name)
+bool StatCollectorManager::remove_collector(const std::string& name)
 {
     auto collector = m_collectors.get(name, nullptr);
-    if (collector)
-    {
-        m_collectors.erase(name);
-        delete collector;
-    }
+    if (!collector)
+        return false;
+
+    m_collectors.erase(name);
+    delete collector;
+    return true;
 }

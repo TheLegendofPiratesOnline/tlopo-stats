@@ -51,6 +51,7 @@ set (SRC_FILES
     src/database/cachedStatCollectorMap.cxx
     src/database/database.cxx
     src/database/dummyDatabase.cxx
+    src/database/mongoDatabase.cxx
 )
 
 include_directories(${MONGO_INCLUDE_DIR})
