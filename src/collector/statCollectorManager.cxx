@@ -7,7 +7,6 @@
 StatCollectorManager::StatCollectorManager(Database* db, boost::asio::io_service& io_service) :
   m_db(db), m_io_service(io_service), m_collectors(this, COLLECTOR_MGR_CACHE_FILENAME)
 {
-
 }
 
 bool StatCollectorManager::add_incremental_collector(const std::string& name,
