@@ -10,6 +10,8 @@ class CachedStatCollectorMap : public CachedMap<std::string, StatCollectorBase*>
     public:
         CachedStatCollectorMap(StatCollectorManager* mgr, const std::string& filename);
 
+        void write_json(json_t** result);
+
     protected:
         virtual void load();
         virtual void save();

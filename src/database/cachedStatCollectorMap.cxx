@@ -27,13 +27,13 @@ void CachedStatCollectorMap::load()
         if (type == "periodic")
         {
             unsigned int period = json_integer_value(json_object_get(value, "period"));
-            m_data[name] = new StatCollector(name, event, m_mgr->m_db, period, m_mgr->m_io_service);
+            m_data[name] = new StatCollector(name, event, m_mgr->m_db, period, *m_mgr->m_io_service);
             m_data[name]->start();
         }
 
         else if (type == "incremental")
         {
-            m_data[name] = new IncrementalStatCollector(name, event, m_mgr->m_db, m_mgr->m_io_service);
+            m_data[name] = new IncrementalStatCollector(name, event, m_mgr->m_db, *m_mgr->m_io_service);
             m_data[name]->start();
         }
 
@@ -46,7 +46,7 @@ void CachedStatCollectorMap::load()
     json_decref(data);
 }
 
-void CachedStatCollectorMap::save()
+void CachedStatCollectorMap::write_json(json_t** result)
 {
     json_t* object = json_object();
     for (auto& it : m_data)
@@ -56,5 +56,12 @@ void CachedStatCollectorMap::save()
         json_object_set_new(object, it.first.c_str(), item);
     }
 
+    *result = object;
+}
+
+void CachedStatCollectorMap::save()
+{
+    json_t* object;
+    write_json(&object);
     write_file(object);
 }
