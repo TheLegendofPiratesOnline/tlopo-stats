@@ -4,6 +4,7 @@
 
 #include "database/dummyDatabase.h"
 #include "collector/statCollector.h"
+#include "collector/statCollectorManager.h"
 #include "collector/incrementalStatCollector.h"
 #include "report/dailyReport.h"
 
@@ -41,11 +42,8 @@ int main(int argc, char** argv)
       std::cout << g_report->get_collection_name() << std::endl;
     }
 
-    StatCollector coll("Pstat", "STAT",  &db, 10, io_service);
-    coll.start();
-
-    IncrementalStatCollector coll2("Istat", "STAT2", &db, io_service);
-    coll2.start();
+    StatCollectorManager mgr(&db, io_service);
+    mgr.add_incremental_collector("enemies_killed", "ENEMY_KILLED");
 
     io_service.run();
     return 0;

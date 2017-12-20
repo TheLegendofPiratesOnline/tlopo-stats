@@ -93,13 +93,3 @@ class CachedMap
         std::unordered_map<_T1, _T2> m_data;
         std::string m_filename;
 };
-
-class CachedDoIdMap : public CachedMap<doid_t, doid_t>
-{
-    public:
-        CachedDoIdMap(const std::string& filename);
-
-    private:
-        virtual void load();
-        virtual void save();
-};

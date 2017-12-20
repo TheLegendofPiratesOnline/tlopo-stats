@@ -39,6 +39,7 @@ set (SRC_FILES
     src/collector/statCollectorBase.cxx
     src/collector/statCollector.cxx
     src/collector/incrementalStatCollector.cxx
+    src/collector/statCollectorManager.cxx
     src/report/report.cxx
     src/report/periodicReport.cxx
     src/report/incrementalPeriodicReport.cxx
@@ -46,6 +47,8 @@ set (SRC_FILES
     src/report/monthlyReport.cxx
     src/report/yearlyReport.cxx
     src/database/cache.cxx
+    src/database/cachedDoIdMap.cxx
+    src/database/cachedStatCollectorMap.cxx
     src/database/database.cxx
     src/database/dummyDatabase.cxx
 )

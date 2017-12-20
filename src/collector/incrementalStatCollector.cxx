@@ -52,3 +52,8 @@ void IncrementalStatCollector::callback(const Event& e)
         report->flush();
     }
 }
+
+std::string IncrementalStatCollector::get_type()
+{
+    return "incremental";
+}

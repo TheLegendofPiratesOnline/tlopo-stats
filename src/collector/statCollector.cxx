@@ -23,3 +23,14 @@ void StatCollector::callback(const Event& e)
         }
     }
 }
+
+void StatCollector::write_json(json_t* object)
+{
+    StatCollectorBase::write_json(object);
+    json_object_set_new(object, "period", json_integer(m_period));
+}
+
+std::string StatCollector::get_type()
+{
+    return "periodic";
+}

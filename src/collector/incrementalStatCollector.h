@@ -13,4 +13,6 @@ class IncrementalStatCollector : public StatCollectorBase
 
     protected:
         virtual void callback(const Event& e);
+
+        virtual std::string get_type();
 };

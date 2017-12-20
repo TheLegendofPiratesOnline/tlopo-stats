@@ -1,7 +1,7 @@
 #pragma once
 
 #include "event/eventListener.h"
-#include "database/cache.h"
+#include "database/cachedDoIdMap.h"
 #include "stats_types.h"
 
 class AvatarManager : private EventListener {
