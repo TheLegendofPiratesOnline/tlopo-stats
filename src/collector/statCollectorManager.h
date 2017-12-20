@@ -11,6 +11,8 @@ class StatCollectorManager final {
         void add_periodic_collector(const std::string& name, const std::string& event,
                                     unsigned int period);
 
+        void remove_collector(const std::string& name);
+
     private:
         Database* m_db;
         boost::asio::io_service& m_io_service;

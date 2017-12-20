@@ -3,24 +3,18 @@
 #include "avatar/avatarManager.h"
 
 #include "database/dummyDatabase.h"
-#include "collector/statCollector.h"
 #include "collector/statCollectorManager.h"
-#include "collector/incrementalStatCollector.h"
-#include "report/dailyReport.h"
 
-static DailyReport* g_report = nullptr;
+static StatCollectorManager* g_mgr = nullptr;
 
 class TestListener : public EventListener
 {
     public:
         TestListener()
         {
-            listen("REPORT", [](const Event& e)
+            listen("DEL", [](const Event& e)
             {
-                doid_t avId = e.doIds[0];
-                long value = e.value;
-
-                g_report->increment(avId, value);
+                g_mgr->remove_collector("enemies_killed");
             });
         }
 };
@@ -36,14 +30,8 @@ int main(int argc, char** argv)
 
     DummyDatabase db;
 
-    {
-      g_report = new DailyReport ("test", &db, io_service);
-      g_report->start();
-      std::cout << g_report->get_collection_name() << std::endl;
-    }
-
-    StatCollectorManager mgr(&db, io_service);
-    mgr.add_incremental_collector("enemies_killed", "ENEMY_KILLED");
+    g_mgr = new StatCollectorManager(&db, io_service);
+    g_mgr->add_incremental_collector("enemies_killed", "ENEMY_KILLED");
 
     io_service.run();
     return 0;

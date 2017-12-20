@@ -34,7 +34,7 @@ class CachedMap
             save();
         }
 
-        inline doid_t get(const _T1& key, const _T2& default_value = 0)
+        inline _T2 get(const _T1& key, const _T2& default_value = 0)
         {
             if (!has_key(key))
                 return default_value;

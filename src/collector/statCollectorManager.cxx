@@ -26,3 +26,13 @@ void StatCollectorManager::add_periodic_collector(const std::string& name,
     collector->start();
     m_collectors.set(name, collector);
 }
+
+void StatCollectorManager::remove_collector(const std::string& name)
+{
+    auto collector = m_collectors.get(name, nullptr);
+    if (collector)
+    {
+        m_collectors.erase(name);
+        delete collector;
+    }
+}
