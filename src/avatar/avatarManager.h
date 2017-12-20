@@ -2,7 +2,7 @@
 
 #include "event/eventListener.h"
 #include "database/cachedDoIdMap.h"
-#include "stats_types.h"
+#include "globals.h"
 
 class AvatarManager : private EventListener {
     public:

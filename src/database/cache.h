@@ -1,6 +1,6 @@
 #pragma once
 
-#include "stats_types.h"
+#include "globals.h"
 
 #include <jansson.h>
 

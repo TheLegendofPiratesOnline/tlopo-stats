@@ -1,7 +1,6 @@
 #include "avatarManager.h"
 
-#include "constants.h"
-#include "events.h"
+#include "globals.h"
 
 AvatarManager::AvatarManager() : m_guild_ids(AVMGR_CACHE_FILENAME)
 {

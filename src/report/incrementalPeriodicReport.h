@@ -1,7 +1,7 @@
 #pragma once
 
 #include "report.h"
-#include "stats_types.h"
+#include "globals.h"
 
 #include <unordered_map>
 

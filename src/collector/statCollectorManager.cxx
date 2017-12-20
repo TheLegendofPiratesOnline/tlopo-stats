@@ -2,7 +2,7 @@
 
 #include "collector/statCollector.h"
 #include "collector/incrementalStatCollector.h"
-#include "constants.h"
+#include "globals.h"
 
 StatCollectorManager::StatCollectorManager(Database* db, boost::asio::io_service& io_service) :
   m_db(db), m_io_service(io_service), m_collectors(this, COLLECTOR_MGR_CACHE_FILENAME)
