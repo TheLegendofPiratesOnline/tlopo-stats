@@ -15,7 +15,7 @@ PeriodicReport::~PeriodicReport()
 
 void PeriodicReport::start()
 {
-    m_timer.expires_from_now(boost::posix_time::minutes(m_period));
+    m_timer.expires_from_now(boost::posix_time::seconds(m_period));
     m_timer.async_wait(boost::bind(&PeriodicReport::save_task,
                                     this, boost::asio::placeholders::error));
 }

@@ -60,6 +60,17 @@ class StatsTest(unittest.TestCase):
         self.expectMonthlyStat(name, avId, expected)
         self.expectYearlyStat(name, avId, expected)
 
+    def expectPeriodicStat(self, name, doId, expected):
+        # Get the last event:
+        cursor = self.db[name].find({'key': doId}).sort('date', pymongo.DESCENDING)
+        try:
+            value = next(cursor)['value']
+
+        except StopIteration:
+            value = 0
+
+        self.assertEquals(value, expected)
+
     def sendEvent(self, event, doIds=[], value=0):
         data = json.dumps({'event': event, 'doIds': doIds, 'value': value})
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # UDP

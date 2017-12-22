@@ -6,6 +6,8 @@
 #include "collector/statCollectorManager.h"
 #include "net/rpcServer.h"
 
+#include <mongo/client/dbclient.h>
+
 void usage(const std::string& error = "")
 {
     std::cerr << "tlopostats [options]" << std::endl;
@@ -98,6 +100,7 @@ int main(int argc, char** argv)
 
     else
     {
+        mongo::client::initialize();
         std::cout << "Using MongoDatabase backend, db_url = " << db_url << std::endl;
         db = new MongoDatabase(db_url);
     }

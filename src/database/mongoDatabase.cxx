@@ -40,7 +40,7 @@ void MongoDatabase::add_periodic_report(const std::string& collection,
     try
     {
         m_client->insert(m_db + "." + collection, BSON(
-                        "_id" << Date_t(time(NULL)) <<
+                        "date" << Date_t(time(NULL)) <<
                         "key" << key <<
                         "value" << (long long)value)
         );
