@@ -15,10 +15,10 @@ void usage(const std::string& error = "")
     std::cerr << "tlopostats [options]" << std::endl;
     std::cerr << "options:" << std::endl;
     std::cerr << std::endl;
-    std::cerr << "--listen addr: address to listen on (default: localhost:8963)" << std::endl;
-    std::cerr << "--rpc addr: address to listen on (default: localhost:8964)" << std::endl;
+    std::cerr << "--listen addr: address to listen on (default: 127.0.0.1:8963)" << std::endl;
+    std::cerr << "--rpc addr: address to listen on (default: 127.0.0.1:8964)" << std::endl;
     std::cerr << "--dummy-db: use DummyDatabase backend instead of MongoDatabase" << std::endl;
-    std::cerr << "--db url: MongoDB url (default: mongodb://localhost:27017/tlopo_stats)" << std::endl;
+    std::cerr << "--db url: MongoDB url (default: mongodb://127.0.0.1:27017/tlopo_stats)" << std::endl;
     if (error.size())
     {
         std::cerr << std::endl;
@@ -37,9 +37,9 @@ int main(int argc, char** argv)
 
     // Parse argv
     bool use_dummy_db = false;
-    std::string addr = "localhost";
-    std::string rpc_addr = "localhost";
-    std::string db_url = "mongodb://localhost:27017/tlopo_stats";
+    std::string addr = "127.0.0.1";
+    std::string rpc_addr = "127.0.0.1";
+    std::string db_url = "mongodb://127.0.0.1:27017/tlopo_stats";
 
     for (int i = 1; i < argc; i++)
     {
