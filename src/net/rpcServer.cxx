@@ -3,9 +3,9 @@
 #include "net/globals.h"
 #include "net/util.h"
 
-#include <iostream>
-
 #include <boost/bind.hpp>
+
+#include <iostream>
 
 RPCServer::RPCServer(boost::asio::io_service& io_service, const std::string& addr) :
     m_io_service(io_service), m_acceptor(io_service)
