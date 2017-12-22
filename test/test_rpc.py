@@ -6,7 +6,7 @@ from common.tlopostats import Daemon
 import unittest
 
 
-class TestAvMgr(StatsTest):
+class TestRPC(StatsTest):
     def test_rpc(self):
         # Start the daemon:
         d = Daemon()
