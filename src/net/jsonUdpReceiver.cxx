@@ -1,5 +1,7 @@
 #include "jsonUdpReceiver.h"
 
+#include <iostream>
+
 JSONUDPReceiver::JSONUDPReceiver(boost::asio::io_service& io_service, const std::string& addr) :
     UDPReceiver(io_service, addr)
 {
