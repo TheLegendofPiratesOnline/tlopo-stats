@@ -14,7 +14,7 @@ class StatsTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.client = pymongo.MongoClient('localhost')
+        cls.client = pymongo.MongoClient('10.42.1.3')
         cls.db = cls.client[Daemon.DATABASE]
         cls.resetDatabase()
 
@@ -74,13 +74,13 @@ class StatsTest(unittest.TestCase):
     def sendEvent(self, event, doIds=[], value=0):
         data = json.dumps({'event': event, 'doIds': doIds, 'value': value})
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # UDP
-        sock.sendto(data, ('localhost', 8963))
+        sock.sendto(data, ('127.0.0.1', 8963))
         time.sleep(0.05)
 
     def doRPC(self, method, **kwargs):
         kwargs['method'] = method
         data = json.dumps(kwargs)
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.connect(('localhost', 8964))
+        sock.connect(('127.0.0.1', 8964))
         sock.send(data + '\n')
         return json.loads(sock.recv(1024))

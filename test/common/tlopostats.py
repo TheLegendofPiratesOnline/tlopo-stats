@@ -30,7 +30,7 @@ class Daemon(object):
             except:
                 pass
 
-        args = ['--db', 'mongodb://localhost:27017/%s' % self.DATABASE]
+        args = ['--db', 'mongodb://127.0.0.1:27017/%s' % self.DATABASE]
         self.daemon = subprocess.Popen([self.DAEMON_PATH] + args)
         time.sleep(1.0)
 
