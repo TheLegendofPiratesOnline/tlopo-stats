@@ -3,3 +3,7 @@ build/
 *.pyo
 *.a
 *.o
+*.obj
+*.exe
+*.exp
+*.lib
