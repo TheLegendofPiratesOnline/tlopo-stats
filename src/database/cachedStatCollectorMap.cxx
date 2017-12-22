@@ -4,6 +4,8 @@
 #include "collector/statCollector.h"
 #include "collector/incrementalStatCollector.h"
 
+#include <iostream>
+
 CachedStatCollectorMap::CachedStatCollectorMap(StatCollectorManager* mgr, const std::string& filename) :
   CachedMap<std::string, StatCollectorBase*>(filename), m_mgr(mgr)
 {

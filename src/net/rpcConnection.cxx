@@ -6,6 +6,8 @@
 
 #include <jansson.h>
 
+#include <iostream>
+
 RPCConnection::RPCConnection(tcp::socket* socket) : m_socket(socket), m_buffer(SOCK_BUFFER_SIZE)
 {
     async_read_until(*m_socket, m_buffer,

@@ -2,6 +2,8 @@
 
 #include "net/util.h"
 
+#include <iostream>
+
 using boost::asio::ip::udp;
 
 UDPReceiver::UDPReceiver(boost::asio::io_service& io_service, const std::string& addr)

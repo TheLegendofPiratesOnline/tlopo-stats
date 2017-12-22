@@ -2,6 +2,8 @@
 
 #include "event/eventManager.h"
 
+#include <iostream>
+
 EventCollector::EventCollector(boost::asio::io_service& io_service,
                                const std::string& addr) : JSONUDPReceiver(io_service, addr)
 {

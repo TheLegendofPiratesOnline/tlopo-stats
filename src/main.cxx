@@ -8,6 +8,8 @@
 
 #include <mongo/client/dbclient.h>
 
+#include <iostream>
+
 void usage(const std::string& error = "")
 {
     std::cerr << "tlopostats [options]" << std::endl;
