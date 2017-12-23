@@ -5,6 +5,7 @@
 #include "report/dailyReport.h"
 #include "report/monthlyReport.h"
 #include "report/yearlyReport.h"
+#include "report/overallReport.h"
 
 #include <boost/algorithm/string/predicate.hpp>
 
@@ -14,10 +15,12 @@ IncrementalStatCollector::IncrementalStatCollector(const std::string& name, cons
     m_reports.push_back(new DailyReport("avatar." + name, db, io_service));
     m_reports.push_back(new MonthlyReport("avatar." + name, db, io_service));
     m_reports.push_back(new YearlyReport("avatar." + name, db, io_service));
+    m_reports.push_back(new OverallReport("avatar." + name, db, io_service));
 
     m_reports.push_back(new DailyReport("guild." + name, db, io_service));
     m_reports.push_back(new MonthlyReport("guild." + name, db, io_service));
     m_reports.push_back(new YearlyReport("guild." + name, db, io_service));
+    m_reports.push_back(new OverallReport("guild." + name, db, io_service));
 }
 
 IncrementalStatCollector::~IncrementalStatCollector()

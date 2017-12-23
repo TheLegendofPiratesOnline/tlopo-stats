@@ -48,6 +48,7 @@ set (SRC_FILES
     src/report/dailyReport.cxx
     src/report/monthlyReport.cxx
     src/report/yearlyReport.cxx
+    src/report/overallReport.cxx
     src/database/cache.cxx
     src/database/cachedDoIdMap.cxx
     src/database/cachedStatCollectorMap.cxx
