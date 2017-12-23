@@ -14,7 +14,7 @@ class StatsTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.client = pymongo.MongoClient('10.42.1.3')
+        cls.client = pymongo.MongoClient('127.0.0.1')
         cls.db = cls.client[Daemon.DATABASE]
         cls.resetDatabase()
 
@@ -55,10 +55,19 @@ class StatsTest(unittest.TestCase):
 
         self.assertEquals(value, expected)
 
+    def expectOverallStat(self, name, avId, expected):
+        value = 0
+        r = self.db[name]['overall'].find_one({'_id': avId})
+        if r:
+            value = r['value']
+
+        self.assertEquals(value, expected)
+
     def expectStat(self, name, avId, expected):
         self.expectDailyStat(name, avId, expected)
         self.expectMonthlyStat(name, avId, expected)
         self.expectYearlyStat(name, avId, expected)
+        self.expectOverallStat(name, avId, expected)
 
     def expectPeriodicStat(self, name, doId, expected):
         # Get the last event:

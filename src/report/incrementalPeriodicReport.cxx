@@ -43,6 +43,9 @@ void IncrementalPeriodicReport::rotate(const boost::system::error_code& e)
     calc_period_string();
 
     auto delay = std::max(time_until_next_task(), (unsigned int)1);
+    if (delay == INF)
+        return;
+
     m_timer.expires_from_now(boost::posix_time::seconds(delay));
     m_timer.async_wait(boost::bind(&IncrementalPeriodicReport::rotate,
                                    this, boost::asio::placeholders::error));
