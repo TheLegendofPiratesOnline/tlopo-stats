@@ -48,11 +48,11 @@ int main(int argc, char** argv)
             use_dummy_db = true;
         }
 
-        else if (strcmp(argv[i], "--addr") == 0)
+        else if (strcmp(argv[i], "--listen") == 0)
         {
             if (i == argc - 1)
             {
-                usage("--addr takes 1 argument");
+                usage("--listen takes 1 argument");
                 return 1;
             }
 
