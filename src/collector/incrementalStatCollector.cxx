@@ -21,6 +21,11 @@ IncrementalStatCollector::IncrementalStatCollector(const std::string& name, cons
     m_reports.push_back(new MonthlyReport("guild." + name, db, io_service));
     m_reports.push_back(new YearlyReport("guild." + name, db, io_service));
     m_reports.push_back(new OverallReport("guild." + name, db, io_service));
+
+    m_reports.push_back(new DailyReport("total." + name, db, io_service));
+    m_reports.push_back(new MonthlyReport("total." + name, db, io_service));
+    m_reports.push_back(new YearlyReport("total." + name, db, io_service));
+    m_reports.push_back(new OverallReport("total." + name, db, io_service));
 }
 
 IncrementalStatCollector::~IncrementalStatCollector()
@@ -29,6 +34,7 @@ IncrementalStatCollector::~IncrementalStatCollector()
 
 void IncrementalStatCollector::callback(const Event& e)
 {
+    // Update avatar and guild reports:
     for (auto doId : e.doIds)
     {
         auto guildId = AvatarManager::get_global_ptr()->get_guild_id(doId);
@@ -42,16 +48,20 @@ void IncrementalStatCollector::callback(const Event& e)
                     report->increment(guildId, e.value);
             }
 
-            else
+            else if (boost::starts_with(report->get_collection_name(), "avatar."))
             {
                 report->increment(doId, e.value);
             }
         }
     }
 
+    // Update total and flush:
     for (auto& it : m_reports)
     {
         IncrementalPeriodicReport* report = (IncrementalPeriodicReport*)it;
+        if (boost::starts_with(report->get_collection_name(), "total."))
+            report->increment(0, e.value);
+
         report->flush();
     }
 }

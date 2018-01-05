@@ -27,6 +27,13 @@ class TestCollectors(StatsTest):
 
         # Check the DB:
         self.expectStat('avatar.enemies_killed', 1234, 3)
+        self.expectStat('total.enemies_killed', 0, 3)
+
+        # Now, 2 players kill an enemy:
+        self.sendEvent('ENEMY_KILLED', [1234, 1235], 1)
+        self.expectStat('avatar.enemies_killed', 1234, 4)
+        self.expectStat('avatar.enemies_killed', 1235, 1)
+        self.expectStat('total.enemies_killed', 0, 4) # 4, not 5
 
         # Cleanup:
         d.stop()
