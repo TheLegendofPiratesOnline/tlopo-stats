@@ -111,7 +111,7 @@ int main(int argc, char** argv)
     StatCollectorManager::get_global_ptr()->init(db, io_service);
 
     // Start the RPC server
-    std::cout << "RPC: Listening on " << addr << std::endl;
+    std::cout << "RPC: Listening on " << rpc_addr << std::endl;
     RPCServer rpc(io_service, rpc_addr);
 
     // Run
