@@ -11,9 +11,9 @@ find_package_handle_standard_args(Jansson DEFAULT_MSG JANSSON_LIBRARY JANSSON_IN
 
 # Find MongoDB
 find_path(MONGO_INCLUDE_DIR mongo/client/dbclient.h
-	  /usr/include
-	  /usr/local/include
-	  /opt/local/include
+      /usr/include
+      /usr/local/include
+      /opt/local/include
 )
 
 find_library(MONGO_LIBRARIES NAMES mongoclient libmongoclient
@@ -55,6 +55,7 @@ set (SRC_FILES
     src/database/database.cxx
     src/database/dummyDatabase.cxx
     src/database/mongoDatabase.cxx
+    src/database/leaderboard.cxx
 )
 
 include_directories(${MONGO_INCLUDE_DIR})
@@ -62,7 +63,7 @@ include_directories(${JANSSON_INCLUDE_DIR})
 include_directories(${PROJECT_SOURCE_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/src)
 
-add_definitions("-pthread -std=c++11 -ggdb")
+add_definitions("-pthread -std=c++14 -ggdb")
 
 add_executable(tlopostats ${SRC_FILES})
 target_link_libraries(tlopostats
@@ -77,11 +78,11 @@ find_package(PythonLibs)
 find_package(PythonInterp)
 if(PYTHONINTERP_FOUND)
     enable_testing()
-	  if(PYTHON_VERSION_MAJOR EQUAL 2)
-		    set(PYTHON2_EXECUTABLE "${PYTHON_EXECUTABLE}")
-	  else()
-		    set(PYTHON2_EXECUTABLE python2)
-	  endif()
+    if(PYTHON_VERSION_MAJOR EQUAL 2)
+        set(PYTHON2_EXECUTABLE "${PYTHON_EXECUTABLE}")
+    else()
+        set(PYTHON2_EXECUTABLE python2)
+    endif()
 
     add_test(av_mgr "${PYTHON2_EXECUTABLE}" "${CMAKE_SOURCE_DIR}/test/test_av_mgr.py")
     add_test(rpc "${PYTHON2_EXECUTABLE}" "${CMAKE_SOURCE_DIR}/test/test_rpc.py")

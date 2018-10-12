@@ -1,4 +1,5 @@
 #include "mongoDatabase.h"
+#include "leaderboard.h"
 
 #include <mongo/bson/bson.h>
 
@@ -64,6 +65,56 @@ void MongoDatabase::add_incremental_report(const std::string& collection,
                          BSON("$inc" << BSON("value" << (long long)value)),
                          true
         );
+    }
+
+    catch (DBException& e)
+    {
+        std::cerr << "failed to write to " << collection << ": "
+                  << e.what() << std::endl;
+    }
+}
+
+
+void MongoDatabase::read_leaderboard(const std::string& collection,
+                                     Leaderboard* leaderboard)
+{
+    try
+    {
+        BSONObj obj;
+        std::auto_ptr<DBClientCursor> cursor = m_client->query(m_db + "." + collection, obj);
+        while (cursor->more())
+        {
+            BSONObj p = cursor->next();
+            leaderboard->set(p["_id"].Int(), p["value"].Int());
+        }
+    }
+
+    catch (DBException& e)
+    {
+        std::cerr << "failed to read " << collection << ": "
+                  << e.what() << std::endl;
+    }
+}
+
+void MongoDatabase::write_leaderboard(const std::string& collection,
+                                      Leaderboard* leaderboard)
+{
+    Leaderboard::entries_vec_t vec;
+    leaderboard->get_sorted_entries(vec);
+
+    int index = 1;
+    try
+    {
+        BSONObj obj;
+        m_client->remove(m_db + "." + collection, obj);
+        for (auto& it : vec)
+        {
+            m_client->insert(m_db + "." + collection, BSON(
+                             "index" << index++ <<
+                             "_id" << it.first <<
+                             "value" << (long long)it.second)
+            );
+        }
     }
 
     catch (DBException& e)
