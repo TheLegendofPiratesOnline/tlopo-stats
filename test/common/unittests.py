@@ -69,6 +69,59 @@ class StatsTest(unittest.TestCase):
         self.expectYearlyStat(name, avId, expected)
         self.expectOverallStat(name, avId, expected)
 
+    def expectDailyLeaderboard(self, name, avId, expectedRank, expectedValue):
+        value = 0
+        rank = 0
+        datestr = datetime.datetime.now().strftime('%Y%b%d')
+        r = self.db[name][datestr].find_one({'_id': avId})
+        if r:
+            value = r['value']
+            rank = r['rank']
+
+        self.assertEquals(rank, expectedRank)
+        self.assertEquals(value, expectedValue)
+
+    def expectMonthlyLeaderboard(self, name, avId, expectedRank, expectedValue):
+        value = 0
+        rank = 0
+        datestr = datetime.datetime.now().strftime('%Y%b')
+        r = self.db[name][datestr].find_one({'_id': avId})
+        if r:
+            value = r['value']
+            rank = r['rank']
+
+        self.assertEquals(rank, expectedRank)
+        self.assertEquals(value, expectedValue)
+
+    def expectYearlyLeaderboard(self, name, avId, expectedRank, expectedValue):
+        value = 0
+        rank = 0
+        datestr = datetime.datetime.now().strftime('%Y')
+        r = self.db[name][datestr].find_one({'_id': avId})
+        if r:
+            value = r['value']
+            rank = r['rank']
+
+        self.assertEquals(rank, expectedRank)
+        self.assertEquals(value, expectedValue)
+
+    def expectOverallLeaderboard(self, name, avId, expectedRank, expectedValue):
+        value = 0
+        rank = 0
+        r = self.db[name]['overall'].find_one({'_id': avId})
+        if r:
+            value = r['value']
+            rank = r['rank']
+
+        self.assertEquals(rank, expectedRank)
+        self.assertEquals(value, expectedValue)
+
+    def expectLeaderboard(self, name, avId, expectedRank, expectedValue):
+        self.expectDailyLeaderboard(name, avId, expectedRank, expectedValue)
+        self.expectMonthlyLeaderboard(name, avId, expectedRank, expectedValue)
+        self.expectYearlyLeaderboard(name, avId, expectedRank, expectedValue)
+        self.expectOverallLeaderboard(name, avId, expectedRank, expectedValue)
+
     def expectPeriodicStat(self, name, doId, expected):
         # Get the last event:
         cursor = self.db[name].find({'key': doId}).sort('date', pymongo.DESCENDING)
@@ -84,7 +137,7 @@ class StatsTest(unittest.TestCase):
         data = json.dumps({'event': event, 'doIds': doIds, 'value': value})
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # UDP
         sock.sendto(data, ('127.0.0.1', 8963))
-        time.sleep(0.05)
+        time.sleep(0.1)
 
     def doRPC(self, method, **kwargs):
         kwargs['method'] = method
