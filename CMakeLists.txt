@@ -63,7 +63,7 @@ include_directories(${JANSSON_INCLUDE_DIR})
 include_directories(${PROJECT_SOURCE_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/src)
 
-add_definitions("-pthread -std=c++14 -ggdb")
+add_definitions("-pthread -std=c++11 -ggdb")
 
 add_executable(tlopostats ${SRC_FILES})
 target_link_libraries(tlopostats

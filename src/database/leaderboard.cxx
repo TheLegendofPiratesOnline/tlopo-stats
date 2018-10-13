@@ -24,7 +24,7 @@ void Leaderboard::get_sorted_entries(entries_vec_t& vec)
         vec.push_back({it.first, it.second, 0});
 
     std::sort(vec.begin(), vec.end(),
-              [](const auto& a, const auto& b) -> bool
+              [](const entry_t& a, const entry_t& b) -> bool
     {
         return a.value > b.value;
     });
