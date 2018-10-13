@@ -10,7 +10,12 @@
 
 class Leaderboard {
     public:
-        typedef std::vector<std::pair<doid_t, long>> entries_vec_t;
+        typedef struct {
+            doid_t key;
+            long value;
+            unsigned int rank;
+        } entry_t;
+        typedef std::vector<entry_t> entries_vec_t;
 
         Leaderboard();
 

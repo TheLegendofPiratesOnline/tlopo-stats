@@ -12,15 +12,15 @@
 IncrementalStatCollector::IncrementalStatCollector(const std::string& name, const std::string& event,
     Database* db, boost::asio::io_service& io_service) : StatCollectorBase(name, event, db)
 {
-    m_reports.push_back(new DailyReport("avatar." + name, db, io_service));
-    m_reports.push_back(new MonthlyReport("avatar." + name, db, io_service));
-    m_reports.push_back(new YearlyReport("avatar." + name, db, io_service));
-    m_reports.push_back(new OverallReport("avatar." + name, db, io_service));
+    m_reports.push_back(new DailyReport("avatar." + name, db, io_service, true));
+    m_reports.push_back(new MonthlyReport("avatar." + name, db, io_service, true));
+    m_reports.push_back(new YearlyReport("avatar." + name, db, io_service, true));
+    m_reports.push_back(new OverallReport("avatar." + name, db, io_service, true));
 
-    m_reports.push_back(new DailyReport("guild." + name, db, io_service));
-    m_reports.push_back(new MonthlyReport("guild." + name, db, io_service));
-    m_reports.push_back(new YearlyReport("guild." + name, db, io_service));
-    m_reports.push_back(new OverallReport("guild." + name, db, io_service));
+    m_reports.push_back(new DailyReport("guild." + name, db, io_service, true));
+    m_reports.push_back(new MonthlyReport("guild." + name, db, io_service, true));
+    m_reports.push_back(new YearlyReport("guild." + name, db, io_service, true));
+    m_reports.push_back(new OverallReport("guild." + name, db, io_service, true));
 
     m_reports.push_back(new DailyReport("total." + name, db, io_service));
     m_reports.push_back(new MonthlyReport("total." + name, db, io_service));
