@@ -39,3 +39,7 @@ class Daemon(object):
             self.daemon.kill()
             self.deamon = None
             time.sleep(1.0)
+
+    def restart(self):
+        self.stop()
+        self.start(False)

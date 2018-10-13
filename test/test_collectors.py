@@ -54,8 +54,8 @@ class TestCollectors(StatsTest):
         time.sleep(4)
 
         # Check the DB:
-        #self.expectPeriodicStat('shard_pop', 30000, 1)
-        #self.expectPeriodicStat('shard_pop', 30001, 1)
+        self.expectPeriodicStat('shard_pop', 30000, 1)
+        self.expectPeriodicStat('shard_pop', 30001, 1)
 
         # Send more events:
         self.sendEvent('SHARD_POP', [30000, 30001], 10)
@@ -66,8 +66,8 @@ class TestCollectors(StatsTest):
         time.sleep(4)
 
         # Should register only the last value for each doId:
-        #self.expectPeriodicStat('shard_pop', 30000, 20)
-        #self.expectPeriodicStat('shard_pop', 30001, 15)
+        self.expectPeriodicStat('shard_pop', 30000, 20)
+        self.expectPeriodicStat('shard_pop', 30001, 15)
 
         # Cleanup:
         d.stop()
