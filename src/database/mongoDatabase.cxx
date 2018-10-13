@@ -7,6 +7,11 @@
 
 using namespace mongo;
 
+static Date_t get_date_now()
+{
+    return Date_t(time(NULL) * 1000);
+}
+
 MongoDatabase::MongoDatabase(const std::string& url)
 {
     std::string error;
@@ -41,7 +46,7 @@ void MongoDatabase::add_periodic_report(const std::string& collection,
     try
     {
         m_client->insert(m_db + "." + collection, BSON(
-                        "date" << Date_t(time(NULL)) <<
+                        "date" << get_date_now() <<
                         "key" << key <<
                         "value" << (long long)value)
         );
@@ -85,7 +90,7 @@ void MongoDatabase::read_leaderboard(const std::string& collection,
         while (cursor->more())
         {
             BSONObj p = cursor->next();
-            leaderboard->set(p["_id"].Int(), p["value"].Int());
+            leaderboard->set(p["_id"].Int(), p["value"].Long());
         }
     }
 
@@ -102,17 +107,25 @@ void MongoDatabase::write_leaderboard(const std::string& collection,
     Leaderboard::entries_vec_t vec;
     leaderboard->get_sorted_entries(vec);
 
-    int index = 1;
     try
     {
         BSONObj obj;
         m_client->remove(m_db + "." + collection, obj);
+
+        // index 0: last updated
+        m_client->insert(m_db + "." + collection, BSON(
+                         "index" << 0 <<
+                         "value" << get_date_now())
+        );
+
+        int index = 1;
         for (auto& it : vec)
         {
             m_client->insert(m_db + "." + collection, BSON(
                              "index" << index++ <<
-                             "_id" << it.first <<
-                             "value" << (long long)it.second)
+                             "rank" << it.rank <<
+                             "_id" << it.key <<
+                             "value" << (long long)it.value)
             );
         }
     }
