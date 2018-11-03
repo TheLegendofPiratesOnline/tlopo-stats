@@ -22,3 +22,6 @@ class Database {
         virtual void write_leaderboard(const std::string& collection,
                                        Leaderboard* leaderboard) = 0;
 };
+
+Database* get_dummy_db();
+Database* get_mongo_db(const std::string& url);
