@@ -1,12 +1,11 @@
 #include "collector/eventCollector.h"
 #include "avatar/avatarManager.h"
 
-#include "database/mongoDatabase.h"
-#include "database/dummyDatabase.h"
+#include "database/database.h"
 #include "collector/statCollectorManager.h"
 #include "net/rpcServer.h"
 
-#include <mongo/client/dbclient.h>
+#include  <mongo/client/dbclient.h>
 
 #include <iostream>
 
@@ -97,14 +96,14 @@ int main(int argc, char** argv)
     if (use_dummy_db)
     {
         std::cout << "Using DummyDatabase backend" << std::endl;
-        db = new DummyDatabase();
+        db = get_dummy_db();
     }
 
     else
     {
-        mongo::client::initialize();
         std::cout << "Using MongoDatabase backend, db_url = " << db_url << std::endl;
-        db = new MongoDatabase(db_url);
+        mongo::client::initialize();
+        db = get_mongo_db(db_url);
     }
 
     // Init StatCollectorManager
