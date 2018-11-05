@@ -25,17 +25,12 @@ class Daemon(object):
         Daemon._running = self
 
         if resetCache:
-            try:
-                os.remove('avMgr.cache')
+            for filename in ('avMgr', 'collectors', 'banned'):
+                try:
+                    os.remove('%s.cache' % filename)
 
-            except:
-                pass
-
-            try:
-                os.remove('collectors.cache')
-
-            except:
-                pass
+                except:
+                    pass
 
         args = ['--db', 'mongodb://127.0.0.1:27017/%s' % self.DATABASE]
         self.daemon = subprocess.Popen([self.DAEMON_PATH] + args)

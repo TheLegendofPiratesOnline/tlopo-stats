@@ -4,7 +4,8 @@
 #include "collector/incrementalStatCollector.h"
 #include "globals.h"
 
-StatCollectorManager::StatCollectorManager() : m_db(nullptr), m_io_service(nullptr), m_collectors(nullptr)
+StatCollectorManager::StatCollectorManager() : m_db(nullptr),
+    m_io_service(nullptr), m_collectors(nullptr), m_ban_list(nullptr)
 {
 }
 
@@ -12,6 +13,7 @@ void StatCollectorManager::init(Database* db, boost::asio::io_service& io_servic
 {
     m_db = db;
     m_io_service = &io_service;
+    m_ban_list = new CachedBanList(COLLECTOR_MGR_BAN_FILENAME);
     m_collectors = new CachedStatCollectorMap(this, COLLECTOR_MGR_CACHE_FILENAME);
 }
 
@@ -49,4 +51,14 @@ bool StatCollectorManager::remove_collector(const std::string& name)
     m_collectors->erase(name);
     delete collector;
     return true;
+}
+
+void StatCollectorManager::add_to_ban_list(doid_t id)
+{
+    m_ban_list->add(id);
+}
+
+bool StatCollectorManager::is_banned(doid_t id)
+{
+    return m_ban_list->has(id);
 }

@@ -52,6 +52,7 @@ set (SRC_FILES
     src/database/cache.cxx
     src/database/cachedDoIdMap.cxx
     src/database/cachedStatCollectorMap.cxx
+    src/database/cachedBanList.cxx
     src/database/database.cxx
     src/database/dummyDatabase.cxx
     src/database/mongoDatabase.cxx

@@ -8,5 +8,6 @@ typedef unsigned int doid_t;
 
 #define AVMGR_CACHE_FILENAME "avMgr.cache"
 #define COLLECTOR_MGR_CACHE_FILENAME "collectors.cache"
+#define COLLECTOR_MGR_BAN_FILENAME "banned.cache"
 
 #define INF 0xFFFFFFFF
