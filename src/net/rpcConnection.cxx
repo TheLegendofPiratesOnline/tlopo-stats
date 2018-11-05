@@ -149,6 +149,23 @@ void RPCConnection::handle_read(const boost::system::error_code& ec, size_t byte
         }
     }
 
+    else if (method == "ban")
+    {
+        auto j_id = json_object_get(args, "id");
+
+        if (!j_id || !json_is_integer(j_id))
+        {
+            error_str = "invalid or missing 'id' param";
+        }
+
+        else
+        {
+            doid_t id = json_integer_value(j_id);
+            StatCollectorManager::get_global_ptr()->add_to_ban_list(id);
+            success = true;
+        }
+    }
+
     else
     {
         error_str = "unknown method";

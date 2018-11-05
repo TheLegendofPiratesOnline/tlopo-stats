@@ -43,6 +43,17 @@ class TestLeaderboards(StatsTest):
         self.expectLeaderboard('ld.guild.enemies_killed', 20000, 2, 2)
         self.expectLeaderboard('ld.guild.enemies_killed', 20001, 1, 5)
 
+        # Ban 1001 and 20001:
+        self.doRPC('ban', id=1001)
+        self.doRPC('ban', id=20001)
+        d.restart() # Flush leaderboard
+
+        self.expectLeaderboard('ld.avatar.enemies_killed', 1000, 2, 1)
+        self.expectLeaderboard('ld.avatar.enemies_killed', 1001, 0, 0)
+        self.expectLeaderboard('ld.avatar.enemies_killed', 1002, 1, 5)
+        self.expectLeaderboard('ld.guild.enemies_killed', 20000, 1, 2)
+        self.expectLeaderboard('ld.guild.enemies_killed', 20001, 0, 0)
+
         # Cleanup:
         d.stop()
         self.resetDatabase()

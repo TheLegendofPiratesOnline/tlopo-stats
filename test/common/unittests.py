@@ -138,10 +138,10 @@ class StatsTest(unittest.TestCase):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # UDP
         sock.sendto(data, ('127.0.0.1', 8963))
         if event.startswith('AV_'):
-            time.sleep(.1)
+            time.sleep(0.1)
 
         else:
-            time.sleep(1.5)
+            time.sleep(3.0)
 
     def doRPC(self, method, **kwargs):
         kwargs['method'] = method
