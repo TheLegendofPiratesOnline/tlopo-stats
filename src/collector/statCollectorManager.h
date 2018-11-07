@@ -17,6 +17,11 @@ class StatCollectorManager final {
         void add_to_ban_list(doid_t id);
         bool is_banned(doid_t id);
 
+        inline Database* get_db()
+        {
+            return m_db;
+        }
+
         inline void write_json(json_t** result)
         {
             m_collectors->write_json(result);

@@ -63,3 +63,13 @@ void Leaderboard::output(std::ostream& out)
             << ": " << it.value << std::endl;
     }
 }
+
+void flush_leaderboard(const std::string& collection)
+{
+    static StatCollectorManager* mgr = StatCollectorManager::get_global_ptr();
+    auto db = mgr->get_db();
+
+    Leaderboard l;
+    db->read_leaderboard(collection, &l);
+    db->write_leaderboard("ld." + collection, &l);
+}
