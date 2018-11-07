@@ -1,6 +1,7 @@
 #include "rpcConnection.h"
 
 #include "collector/statCollectorManager.h"
+#include "database/leaderboard.h"
 
 #include <boost/bind.hpp>
 
@@ -162,6 +163,23 @@ void RPCConnection::handle_read(const boost::system::error_code& ec, size_t byte
         {
             doid_t id = json_integer_value(j_id);
             StatCollectorManager::get_global_ptr()->add_to_ban_list(id);
+            success = true;
+        }
+    }
+
+    else if (method == "flush_leaderboard")
+    {
+        auto j_coll = json_object_get(args, "coll");
+
+        if (!j_coll || !json_is_string(j_coll))
+        {
+            error_str = "invalid or missing 'coll' param";
+        }
+
+        else
+        {
+            std::string coll = json_string_value(j_coll);
+            flush_leaderboard(coll);
             success = true;
         }
     }
