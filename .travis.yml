@@ -23,7 +23,7 @@ addons:
         - ubuntu-toolchain-r-test
     packages:
         - cmake
-        - libboost-dev
+        - libboost-all-dev
         - libjansson-dev
         - mongodb-org-server
         - clang-5.0
