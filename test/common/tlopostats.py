@@ -8,6 +8,8 @@ class Daemon(object):
     DAEMON_PATH = './tlopostats'
     DATABASE = 'tlopo_stats_test'
 
+    _running = None
+
     def __init__(self):
         self.daemon = None
 
@@ -17,18 +19,18 @@ class Daemon(object):
         self.stop()
 
     def start(self, resetCache=True):
+        if Daemon._running:
+            Daemon._running.stop()
+
+        Daemon._running = self
+
         if resetCache:
-            try:
-                os.remove('avMgr.cache')
+            for filename in ('avMgr', 'collectors', 'banned'):
+                try:
+                    os.remove('%s.cache' % filename)
 
-            except:
-                pass
-
-            try:
-                os.remove('collectors.cache')
-
-            except:
-                pass
+                except:
+                    pass
 
         args = ['--db', 'mongodb://127.0.0.1:27017/%s' % self.DATABASE]
         self.daemon = subprocess.Popen([self.DAEMON_PATH] + args)
@@ -38,6 +40,7 @@ class Daemon(object):
         if self.daemon:
             self.daemon.kill()
             self.deamon = None
+            Daemon._running = None
             time.sleep(1.0)
 
     def restart(self):

@@ -37,3 +37,5 @@ class Leaderboard {
     private:
         std::unordered_map<doid_t, long> m_entries;
 };
+
+void flush_leaderboard(const std::string& collection);

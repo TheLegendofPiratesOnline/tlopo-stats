@@ -2,6 +2,7 @@
 
 #include "database/database.h"
 #include "database/cachedStatCollectorMap.h"
+#include "database/cachedBanList.h"
 
 class StatCollectorManager final {
     public:
@@ -12,6 +13,14 @@ class StatCollectorManager final {
                                     unsigned int period);
 
         bool remove_collector(const std::string& name);
+
+        void add_to_ban_list(doid_t id);
+        bool is_banned(doid_t id);
+
+        inline Database* get_db()
+        {
+            return m_db;
+        }
 
         inline void write_json(json_t** result)
         {
@@ -31,6 +40,7 @@ class StatCollectorManager final {
         boost::asio::io_service* m_io_service;
 
         CachedStatCollectorMap* m_collectors;
+        CachedBanList* m_ban_list;
 
     friend class CachedStatCollectorMap;
 };

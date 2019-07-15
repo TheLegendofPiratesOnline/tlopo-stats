@@ -1,5 +1,7 @@
 #include "leaderboard.h"
 
+#include "collector/statCollectorManager.h"
+
 #include <algorithm>
 
 Leaderboard::Leaderboard() : m_entries({})
@@ -20,8 +22,13 @@ void Leaderboard::add(doid_t key, long value)
 
 void Leaderboard::get_sorted_entries(entries_vec_t& vec)
 {
+    static StatCollectorManager* mgr = StatCollectorManager::get_global_ptr();
+
     for (auto& it : m_entries)
-        vec.push_back({it.first, it.second, 0});
+    {
+        if (!mgr->is_banned(it.first))
+            vec.push_back({it.first, it.second, 0});
+    }
 
     std::sort(vec.begin(), vec.end(),
               [](const entry_t& a, const entry_t& b) -> bool
@@ -55,4 +62,14 @@ void Leaderboard::output(std::ostream& out)
         out << "    " << it.rank << ". " << it.key
             << ": " << it.value << std::endl;
     }
+}
+
+void flush_leaderboard(const std::string& collection)
+{
+    static StatCollectorManager* mgr = StatCollectorManager::get_global_ptr();
+    auto db = mgr->get_db();
+
+    Leaderboard l;
+    db->read_leaderboard(collection, &l);
+    db->write_leaderboard("ld." + collection, &l);
 }
