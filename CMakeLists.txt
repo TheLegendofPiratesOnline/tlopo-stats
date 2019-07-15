@@ -75,7 +75,6 @@ target_link_libraries(tlopostats
 )
 
 # Test:
-find_package(PythonLibs)
 find_package(PythonInterp)
 if(PYTHONINTERP_FOUND)
     enable_testing()
