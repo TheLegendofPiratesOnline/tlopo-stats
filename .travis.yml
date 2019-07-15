@@ -48,8 +48,8 @@ before_install:
 
 install:
 - OLD_PWD=$PWD
-- cd ~/build && wget https://github.com/mongodb/mongo-c-driver/releases/download/1.13.0/mongo-c-driver-1.13.0.tar.gz && tar xzf mongo-c-driver-1.13.0.tar.gz && cd mongo-c-driver-1.13.0 && cmake -DENABLE_ZLIB=BUNDLED -DENABLE_SSL=OFF -DENABLE_TESTS=OFF . && make && sudo make install
-- cd ~/build && git clone https://github.com/mongodb/mongo-cxx-driver && cd mongo-cxx-driver/build && git checkout 8396159 && cmake .. && make && sudo make install && sudo cp -r install/* /usr/local
+- cd ~/build && wget https://github.com/mongodb/mongo-c-driver/releases/download/1.1.10/mongo-c-driver-1.1.10.tar.gz && tar xzf mongo-c-driver-1.1.10.tar.gz && cd mongo-c-driver-1.1.10 && ./configure && make && sudo make install
+- cd ~/build && git clone https://github.com/mongodb/mongo-cxx-driver -b legacy && cd mongo-cxx-driver && sudo scons --sharedclient install
 - cd $OLD_PWD
 
 script: mkdir -p build && cd build && cmake .. && make && env CTEST_OUTPUT_ON_FAILURE=1 make test
