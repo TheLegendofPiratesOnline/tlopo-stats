@@ -52,4 +52,4 @@ install:
 - cd ~/build && git clone https://github.com/mongodb/mongo-cxx-driver && cd mongo-cxx-driver/build && git checkout 8396159 && cmake .. && make && sudo make install && sudo cp -r install/* /usr/local
 - cd $OLD_PWD
 
-script: cd build && cmake .. && make && env CTEST_OUTPUT_ON_FAILURE=1 make test
+script: mkdir -p build && cd build && cmake .. && make && env CTEST_OUTPUT_ON_FAILURE=1 make test
