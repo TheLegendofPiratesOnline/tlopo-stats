@@ -1,9 +1,12 @@
 language: cpp
 os:
     - linux
+    - osx
 
 dist: trusty
 sudo: required
+
+osx_image: xcode9.3
 
 compiler:
     - clang
@@ -34,6 +37,7 @@ before_install:
     brew upgrade python;
     brew update;
     brew install mongodb;
+    brew install scons;
   fi
 - |
   if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
