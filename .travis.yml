@@ -38,6 +38,7 @@ before_install:
     brew update;
     brew install mongodb;
     brew install scons;
+    brew install jansson;
   fi
 - |
   if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
