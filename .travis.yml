@@ -1,12 +1,8 @@
 language: cpp
-os:
-    - linux
-    - osx
+os: linux
 
 dist: trusty
 sudo: required
-
-osx_image: xcode9.3
 
 compiler:
     - clang
