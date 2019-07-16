@@ -29,20 +29,10 @@ addons:
 
 before_install:
 - |
-  if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-    brew upgrade python;
-    brew update;
-    brew install mongodb;
-    brew install scons;
-    brew install jansson;
-  fi
-- |
-  if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-    sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 100
-    sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 100
-    sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-5.0 100
-    sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-5.0 100
-  fi
+  sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 100
+  sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 100
+  sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-5.0 100
+  sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-5.0 100
 
 install:
 - OLD_PWD=$PWD
