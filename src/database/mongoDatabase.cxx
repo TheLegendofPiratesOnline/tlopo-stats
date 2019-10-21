@@ -42,14 +42,17 @@ class MongoDatabase : public Database {
             m_client = nullptr;
         }
 
-        virtual void add_periodic_report(const std::string& collection,
-                                         doid_t key,
-                                         long value)
+        virtual void add_entry(const std::string& name,
+                               const std::string& type,
+                               doid_t key,
+                               long value)
         {
             try
             {
-                m_client->insert(m_db + "." + collection, BSON(
+                m_client->insert(m_db + ".events", BSON(
+                                 "name" << name <<
                                  "date" << get_date_now() <<
+                                 "type" << type <<
                                  "key" << key <<
                                  "value" << (long long)value)
                 );
@@ -57,7 +60,7 @@ class MongoDatabase : public Database {
 
             catch (DBException& e)
             {
-                std::cerr << "failed to write to " << collection << ": "
+                std::cerr << "failed to add entry " << name << ": "
                           << e.what() << std::endl;
             }
         }

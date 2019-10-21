@@ -5,8 +5,7 @@
 class YearlyReport : public IncrementalPeriodicReport {
     public:
         YearlyReport(const std::string& name, Database* db,
-                     boost::asio::io_service& io_service,
-                     bool leaderboard=false);
+                     boost::asio::io_service& io_service);
         virtual ~YearlyReport();
 
     protected:

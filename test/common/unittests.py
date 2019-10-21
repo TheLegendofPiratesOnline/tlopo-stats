@@ -28,46 +28,15 @@ class StatsTest(unittest.TestCase):
     def resetDatabase(cls):
         cls.client.drop_database(Daemon.DATABASE)
 
-    def expectDailyStat(self, name, avId, expected):
+    def expectStat(self, name, type, avId, expected):
         value = 0
-        datestr = datetime.datetime.now().strftime('%Y%b%d')
-        r = self.db[name][datestr].find_one({'_id': avId})
-        if r:
-            value = r['value']
+
+        # Fetch events from queue:
+        for r in self.db.events.find({'key': avId, 'name': name, 'type': type}):
+            value += r['value']
+            self.db.events.remove({'_id': r['_id']})
 
         self.assertEquals(value, expected)
-
-    def expectMonthlyStat(self, name, avId, expected):
-        value = 0
-        datestr = datetime.datetime.now().strftime('%Y%b')
-        r = self.db[name][datestr].find_one({'_id': avId})
-        if r:
-            value = r['value']
-
-        self.assertEquals(value, expected)
-
-    def expectYearlyStat(self, name, avId, expected):
-        value = 0
-        datestr = datetime.datetime.now().strftime('%Y')
-        r = self.db[name][datestr].find_one({'_id': avId})
-        if r:
-            value = r['value']
-
-        self.assertEquals(value, expected)
-
-    def expectOverallStat(self, name, avId, expected):
-        value = 0
-        r = self.db[name]['overall'].find_one({'_id': avId})
-        if r:
-            value = r['value']
-
-        self.assertEquals(value, expected)
-
-    def expectStat(self, name, avId, expected):
-        self.expectDailyStat(name, avId, expected)
-        self.expectMonthlyStat(name, avId, expected)
-        self.expectYearlyStat(name, avId, expected)
-        self.expectOverallStat(name, avId, expected)
 
     def expectDailyLeaderboard(self, name, avId, expectedRank, expectedValue):
         value = 0
@@ -124,12 +93,15 @@ class StatsTest(unittest.TestCase):
 
     def expectPeriodicStat(self, name, doId, expected):
         # Get the last event:
-        cursor = self.db[name].find({'key': doId}).sort('date', pymongo.DESCENDING)
+        cursor = self.db.events.find({'key': doId, 'name': name}).sort('date', pymongo.DESCENDING)
         try:
             value = next(cursor)['value']
 
         except StopIteration:
             value = 0
+
+        # Remove events from event queue:
+        self.db.events.remove({'key': doId, 'name': name})
 
         self.assertEquals(value, expected)
 

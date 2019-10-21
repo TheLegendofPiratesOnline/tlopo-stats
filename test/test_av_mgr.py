@@ -22,7 +22,7 @@ class TestAvMgr(StatsTest):
         self.sendEvent('ENEMY_KILLED', [1234], 1)
 
         # Check the DB:
-        self.expectStat('avatar.enemies_killed', 1234, 1)
+        self.expectStat('enemies_killed', 'avatar', 1234, 1)
 
         # Give 1234 a guild:
         self.sendEvent('AV_GUILD', [1234], 10000)
@@ -31,38 +31,38 @@ class TestAvMgr(StatsTest):
         self.sendEvent('ENEMY_KILLED', [1234], 2)
 
         # This time, check the guild stats too:
-        self.expectStat('avatar.enemies_killed', 1234, 3)
-        self.expectStat('guild.enemies_killed', 10000, 2)
+        self.expectStat('enemies_killed', 'avatar', 1234, 2)
+        self.expectStat('enemies_killed', 'guild', 10000, 2)
 
         # Change their guild and do it again:
         self.sendEvent('AV_GUILD', [1234], 10001)
         self.sendEvent('ENEMY_KILLED', [1234], 7)
-        self.expectStat('avatar.enemies_killed', 1234, 10)
-        self.expectStat('guild.enemies_killed', 10000, 2) # No change
-        self.expectStat('guild.enemies_killed', 10001, 7)
+        self.expectStat('enemies_killed', 'avatar', 1234, 7)
+        self.expectStat('enemies_killed', 'guild', 10000, 0) # No change
+        self.expectStat('enemies_killed', 'guild', 10001, 7)
 
         # No guild:
         self.sendEvent('AV_GUILD', [1234], 0)
         self.sendEvent('ENEMY_KILLED', [1234], 5)
-        self.expectStat('avatar.enemies_killed', 1234, 15)
-        self.expectStat('guild.enemies_killed', 10000, 2) # No change
-        self.expectStat('guild.enemies_killed', 10001, 7) # No change
+        self.expectStat('enemies_killed', 'avatar', 1234, 5)
+        self.expectStat('enemies_killed', 'guild', 10000, 0) # No change
+        self.expectStat('enemies_killed', 'guild', 10001, 0) # No change
 
         # Back to 10000:
         self.sendEvent('AV_GUILD', [1234], 10000)
         self.sendEvent('ENEMY_KILLED', [1234], 2)
-        self.expectStat('avatar.enemies_killed', 1234, 17)
-        self.expectStat('guild.enemies_killed', 10000, 4)
-        self.expectStat('guild.enemies_killed', 10001, 7) # No change
+        self.expectStat('enemies_killed', 'avatar', 1234, 2)
+        self.expectStat('enemies_killed', 'guild', 10000, 2)
+        self.expectStat('enemies_killed', 'guild', 10001, 0) # No change
 
         # Avatar goes offline:
         self.sendEvent('AV_OFFLINE', [1234], 0)
 
         # I'd tell you an UDP joke, but you wouldn't get it
         self.sendEvent('ENEMY_KILLED', [1234], 5)
-        self.expectStat('avatar.enemies_killed', 1234, 22)
-        self.expectStat('guild.enemies_killed', 10000, 4) # No change
-        self.expectStat('guild.enemies_killed', 10001, 7) # No change
+        self.expectStat('enemies_killed', 'avatar', 1234, 5)
+        self.expectStat('enemies_killed', 'guild', 10000, 0) # No change
+        self.expectStat('enemies_killed', 'guild', 10001, 0) # No change
 
         # Cleanup:
         d.stop()
@@ -86,8 +86,8 @@ class TestAvMgr(StatsTest):
         self.sendEvent('ENEMY_KILLED', [1234], 1)
 
         # Check the DB:
-        self.expectStat('avatar.enemies_killed', 1234, 1)
-        self.expectStat('guild.enemies_killed', 10000, 1)
+        self.expectStat('enemies_killed', 'avatar', 1234, 1)
+        self.expectStat('enemies_killed', 'guild', 10000, 1)
 
         # Oh no! The daemon died!
         d.stop()
@@ -99,8 +99,8 @@ class TestAvMgr(StatsTest):
         self.sendEvent('ENEMY_KILLED', [1234], 1)
 
         # Check the DB:
-        self.expectStat('avatar.enemies_killed', 1234, 2)
-        self.expectStat('guild.enemies_killed', 10000, 2)
+        self.expectStat('enemies_killed', 'avatar', 1234, 1)
+        self.expectStat('enemies_killed', 'guild', 10000, 1)
 
         # Cleanup:
         d.stop()

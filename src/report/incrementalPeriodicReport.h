@@ -9,8 +9,7 @@
 class IncrementalPeriodicReport : public Report {
     public:
         IncrementalPeriodicReport(const std::string& name, Database* db,
-                                  boost::asio::io_service& io_service,
-                                  bool leaderboard);
+                                  boost::asio::io_service& io_service);
         virtual ~IncrementalPeriodicReport();
 
         virtual void start();
@@ -18,7 +17,6 @@ class IncrementalPeriodicReport : public Report {
         virtual std::string get_collection_name();
         void increment(doid_t key, long value);
         void flush_leaderboard(std::string name);
-        void flush();
 
     protected:
         virtual unsigned int time_until_next_task() = 0;
@@ -30,8 +28,6 @@ class IncrementalPeriodicReport : public Report {
     private:
         void rotate(const boost::system::error_code& e);
         void leaderboard_task(const boost::system::error_code& e);
-
-        std::unordered_map<doid_t, long> m_temp_cache;
 
         boost::asio::deadline_timer m_ld_timer;
         Leaderboard* m_leaderboard;

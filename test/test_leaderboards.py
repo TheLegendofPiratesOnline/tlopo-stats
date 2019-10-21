@@ -27,11 +27,11 @@ class TestLeaderboards(StatsTest):
         self.sendEvent('ENEMY_KILLED', [1002], 5)
 
         # Check the DB:
-        self.expectStat('avatar.enemies_killed', 1000, 1)
-        self.expectStat('avatar.enemies_killed', 1001, 1)
-        self.expectStat('avatar.enemies_killed', 1002, 5)
-        self.expectStat('guild.enemies_killed', 20000, 2)
-        self.expectStat('guild.enemies_killed', 20001, 5)
+        self.expectStat('enemies_killed', 'avatar', 1000, 1)
+        self.expectStat('enemies_killed', 'avatar', 1001, 1)
+        self.expectStat('enemies_killed', 'avatar', 1002, 5)
+        self.expectStat('enemies_killed', 'guild', 20000, 2)
+        self.expectStat('enemies_killed', 'guild', 20001, 5)
 
         # Restart the daemon (forces leaderboard flush):
         d.restart()

@@ -8,7 +8,7 @@ class IncrementalStatCollector : public StatCollectorBase
 {
     public:
         IncrementalStatCollector(const std::string& name, const std::string& event,
-                      Database* db, boost::asio::io_service& io_service);
+                                 Database* db, boost::asio::io_service& io_service);
         virtual ~IncrementalStatCollector();
 
     protected:

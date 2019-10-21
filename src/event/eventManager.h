@@ -12,6 +12,7 @@ class EventListener; // fwd decl
 typedef struct
 {
     std::string type;
+    std::string date;
     std::vector<doid_t> doIds;
     long value;
 } Event;
