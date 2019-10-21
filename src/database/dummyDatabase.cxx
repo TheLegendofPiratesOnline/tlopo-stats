@@ -13,12 +13,14 @@ class DummyDatabase : public Database {
         {
         }
 
-        virtual void add_periodic_report(const std::string& collection,
-                                         doid_t key,
-                                         long value)
+        virtual void add_entry(const std::string& name,
+                               const std::string& type,
+                               doid_t key,
+                               long value)
         {
-            std::cout << "DummyDatabase::add_periodic_report" << std::endl;
-            std::cout << "    collection: " << collection << std::endl;
+            std::cout << "DummyDatabase::add_entry" << std::endl;
+            std::cout << "    name: " << name << std::endl;
+            std::cout << "    type: " << type << std::endl;
             std::cout << "    key: " << key << std::endl;
             std::cout << "    value: " << value << std::endl;
         }

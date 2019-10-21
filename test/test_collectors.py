@@ -8,7 +8,7 @@ import time
 
 
 class TestCollectors(StatsTest):
-    def test_incremental_collectors(self):
+    def test_incremental_collector(self):
         # Start the daemon:
         d = Daemon()
         d.start()
@@ -20,20 +20,18 @@ class TestCollectors(StatsTest):
         self.sendEvent('ENEMY_KILLED', [1234], 1)
 
         # Check the DB:
-        self.expectStat('avatar.enemies_killed', 1234, 1)
+        self.expectStat('enemies_killed', 'avatar', 1234, 1)
 
         # Send the event again:
         self.sendEvent('ENEMY_KILLED', [1234], 2)
 
         # Check the DB:
-        self.expectStat('avatar.enemies_killed', 1234, 3)
-        self.expectStat('total.enemies_killed', 0, 3)
+        self.expectStat('enemies_killed', 'avatar', 1234, 2)
 
         # Now, 2 players kill an enemy:
         self.sendEvent('ENEMY_KILLED', [1234, 1235], 1)
-        self.expectStat('avatar.enemies_killed', 1234, 4)
-        self.expectStat('avatar.enemies_killed', 1235, 1)
-        self.expectStat('total.enemies_killed', 0, 4) # 4, not 5
+        self.expectStat('enemies_killed', 'avatar', 1234, 1)
+        self.expectStat('enemies_killed', 'avatar', 1235, 1)
 
         # Cleanup:
         d.stop()
