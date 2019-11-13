@@ -32,7 +32,7 @@ void PeriodicReport::save_task(const boost::system::error_code& e)
 
     for (auto& it : m_data)
     {
-        m_db->add_periodic_report(get_collection_name(), it.first, it.second);
+        m_db->add_entry(get_collection_name(), "", it.first, it.second);
     }
 
     start();

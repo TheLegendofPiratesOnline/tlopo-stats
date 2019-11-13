@@ -11,9 +11,10 @@ class Database {
         Database();
         virtual ~Database();
 
-        virtual void add_periodic_report(const std::string& collection,
-                                         doid_t key,
-                                         long value) = 0;
+        virtual void add_entry(const std::string& name,
+                               const std::string& type,
+                               doid_t key,
+                               long value) = 0;
         virtual void add_incremental_report(const std::string& collection,
                                             doid_t key,
                                             long value) = 0;

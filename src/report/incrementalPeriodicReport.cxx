@@ -3,14 +3,9 @@
 #include <boost/bind.hpp>
 
 IncrementalPeriodicReport::IncrementalPeriodicReport(const std::string& name,
-    Database* db, boost::asio::io_service& io_service,
-    bool leaderboard) : Report(name, db, io_service), m_ld_timer(io_service)
+    Database* db, boost::asio::io_service& io_service) : Report(name, db, io_service),
+        m_ld_timer(io_service), m_leaderboard(new Leaderboard)
 {
-    if (leaderboard)
-        m_leaderboard = new Leaderboard;
-
-    else
-        m_leaderboard = nullptr;
 }
 
 IncrementalPeriodicReport::~IncrementalPeriodicReport()
@@ -23,6 +18,11 @@ void IncrementalPeriodicReport::start()
     rotate(noerror);
 }
 
+std::string IncrementalPeriodicReport::get_collection_name()
+{
+    return m_name + "." + m_period_string;
+}
+
 void IncrementalPeriodicReport::flush_leaderboard(std::string name)
 {
     if (!name.size())
@@ -31,25 +31,10 @@ void IncrementalPeriodicReport::flush_leaderboard(std::string name)
     m_leaderboard->save(m_db, name);
 }
 
-void IncrementalPeriodicReport::flush()
-{
-    for (auto& it : m_temp_cache)
-    {
-        m_leaderboard->add(it.first, it.second);
-        m_db->add_incremental_report(get_collection_name(), it.first, it.second);
-    }
-
-    m_temp_cache.clear();
-}
-
 void IncrementalPeriodicReport::increment(doid_t key, long value)
 {
-    m_temp_cache[key] += value;
-}
-
-std::string IncrementalPeriodicReport::get_collection_name()
-{
-    return m_name + "." + m_period_string;
+    m_db->add_incremental_report(get_collection_name(), key, value);
+    m_leaderboard->add(key, value);
 }
 
 void IncrementalPeriodicReport::rotate(const boost::system::error_code& e)
@@ -62,14 +47,11 @@ void IncrementalPeriodicReport::rotate(const boost::system::error_code& e)
 
     if (!prev_period_string.size())
     {
-        // Initialize leaderboard, if any
-        if (m_leaderboard)
-        {
-            m_leaderboard->load(m_db, get_collection_name());
+        // Initialize leaderboard
+        m_leaderboard->load(m_db, get_collection_name());
 
-            boost::system::error_code noerror;
-            leaderboard_task(noerror);
-        }
+        boost::system::error_code noerror;
+        leaderboard_task(noerror);
     }
 
     else if (prev_period_string != m_period_string)

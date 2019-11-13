@@ -3,6 +3,7 @@
 #include "event/eventManager.h"
 
 #include <iostream>
+#include <time.h>
 
 EventCollector::EventCollector(boost::asio::io_service& io_service,
                                const std::string& addr) : JSONUDPReceiver(io_service, addr)
@@ -39,6 +40,9 @@ void EventCollector::handle_packet(json_t* object)
                 e.doIds.push_back(json_integer_value(item));
         }
     }
+
+    time_t now = time(NULL);
+    e.date = ctime(&now);
 
     EventManager::get_global_ptr()->send(e);
 }

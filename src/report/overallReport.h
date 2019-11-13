@@ -5,8 +5,7 @@
 class OverallReport : public IncrementalPeriodicReport {
     public:
         OverallReport(const std::string& name, Database* db,
-                      boost::asio::io_service& io_service,
-                      bool leaderboard=false);
+                      boost::asio::io_service& io_service);
         virtual ~OverallReport();
 
     protected:
