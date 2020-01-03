@@ -1,12 +1,12 @@
 #pragma once
 
 #include "event/eventListener.h"
-#include "database/cachedDoIdMap.h"
+#include "database/database.h"
 #include "globals.h"
 
 class AvatarManager : private EventListener {
     public:
-        void start();
+        void init(Database* db);
         doid_t get_guild_id(doid_t avId);
 
         inline static AvatarManager* get_global_ptr() {
@@ -16,5 +16,6 @@ class AvatarManager : private EventListener {
 
     private:
         AvatarManager();
-        CachedDoIdMap m_guild_ids;
+
+        guild_map_t m_guild_ids;
 };

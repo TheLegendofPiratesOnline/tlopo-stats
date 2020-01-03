@@ -89,11 +89,8 @@ class TestAvMgr(StatsTest):
         self.expectStat('enemies_killed', 'avatar', 1234, 1)
         self.expectStat('enemies_killed', 'guild', 10000, 1)
 
-        # Oh no! The daemon died!
-        d.stop()
-
-        # Restart it:
-        d.start(resetCache=False)
+        # Oh no! The daemon died! Restart it:
+        d.restart()
 
         # Send the event again:
         self.sendEvent('ENEMY_KILLED', [1234], 1)
@@ -105,6 +102,7 @@ class TestAvMgr(StatsTest):
         # Cleanup:
         d.stop()
         self.resetDatabase()
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -14,10 +14,11 @@ RUN apk update && apk add \
   clang-dev \
   cmake \
   git \
+  hiredis-dev \
   jansson-dev \
+  libev-dev \
   openssh-client \
-  perl \
-  scons
+  perl
 
 RUN rm /usr/bin/g++ && rm /usr/bin/gcc && ln -s $(which clang++) /usr/bin/g++ && ln -s $(which clang++) /usr/bin/gcc
 
@@ -25,18 +26,13 @@ RUN mkdir -p /build
 
 WORKDIR /build
 
-RUN wget https://github.com/mongodb/mongo-c-driver/releases/download/1.1.10/mongo-c-driver-1.1.10.tar.gz \
-    && tar xzf mongo-c-driver-1.1.10.tar.gz \
-    && rm mongo-c-driver-1.1.10.tar.gz \
-    && cd mongo-c-driver-1.1.10 \
-    && ./configure \
-    && make -j4 \
+RUN git clone https://github.com/hmartiro/redox \
+    && cd redox \
+    && mkdir build \
+    && cd build \
+    && cmake -Dlib=off -Dstatic_lib=on .. \
+    && make \
     && make install
-
-RUN git clone https://github.com/mongodb/mongo-cxx-driver -b legacy \
-    && cd mongo-cxx-driver \
-    && scons --sharedclient --disable-warnings-as-errors install \
-    && cp -r build/install/* /usr/local
 
 COPY . /app
 WORKDIR /app/build

@@ -93,5 +93,6 @@ class TestRPC(StatsTest):
         d.stop()
         self.resetDatabase()
 
+
 if __name__ == '__main__':
     unittest.main()

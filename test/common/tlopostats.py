@@ -18,21 +18,13 @@ class Daemon(object):
     def __del__(self):
         self.stop()
 
-    def start(self, resetCache=True):
+    def start(self):
         if Daemon._running:
             Daemon._running.stop()
 
         Daemon._running = self
 
-        if resetCache:
-            for filename in ('avMgr', 'collectors', 'banned'):
-                try:
-                    os.remove('%s.cache' % filename)
-
-                except:
-                    pass
-
-        args = ['--db', 'mongodb://127.0.0.1:27017/%s' % self.DATABASE]
+        args = ['--redis-db', '127.0.0.1', '6379', self.DATABASE]
         self.daemon = subprocess.Popen([self.DAEMON_PATH] + args)
         time.sleep(1.0)
 
@@ -45,4 +37,4 @@ class Daemon(object):
 
     def restart(self):
         self.stop()
-        self.start(False)
+        self.start()

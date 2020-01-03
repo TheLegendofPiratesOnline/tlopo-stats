@@ -1,5 +1,4 @@
 #include "database.h"
-#include "leaderboard.h"
 
 #include <iostream>
 
@@ -10,6 +9,34 @@ class DummyDatabase : public Database {
         }
 
         virtual ~DummyDatabase()
+        {
+        }
+
+        virtual void get_collectors(boost::asio::io_service& io_service, collector_map_t& map)
+        {
+        }
+
+        virtual void add_collector(StatCollectorBase* collector)
+        {
+        }
+
+        virtual void remove_collector(StatCollectorBase* collector)
+        {
+        }
+
+        virtual void get_ban_list(doid_list_t& list)
+        {
+        }
+
+        virtual void add_to_ban_list(doid_t id)
+        {
+        }
+
+        virtual void get_guild_map(guild_map_t& map)
+        {
+        }
+
+        virtual void add_to_guild_map(doid_t av, doid_t guild)
         {
         }
 
@@ -33,19 +60,6 @@ class DummyDatabase : public Database {
             std::cout << "    collection: " << collection << std::endl;
             std::cout << "    key: " << key << std::endl;
             std::cout << "    value: " << value << std::endl;
-        }
-
-        virtual void read_leaderboard(const std::string& collection,
-                                      Leaderboard* leaderboard)
-        {
-            std::cout << "DummyDatabase::read_leaderboard " << collection << std::endl;
-        }
-
-        virtual void write_leaderboard(const std::string& collection,
-                                       Leaderboard* leaderboard)
-        {
-            std::cout << "DummyDatabase::write_leaderboard " << collection << std::endl;
-            leaderboard->output(std::cout);
         }
 };
 

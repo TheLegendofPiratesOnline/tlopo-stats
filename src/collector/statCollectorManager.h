@@ -1,8 +1,8 @@
 #pragma once
 
 #include "database/database.h"
-#include "database/cachedStatCollectorMap.h"
-#include "database/cachedBanList.h"
+
+#include <jansson.h>
 
 class StatCollectorManager final {
     public:
@@ -17,15 +17,7 @@ class StatCollectorManager final {
         void add_to_ban_list(doid_t id);
         bool is_banned(doid_t id);
 
-        inline Database* get_db()
-        {
-            return m_db;
-        }
-
-        inline void write_json(json_t** result)
-        {
-            m_collectors->write_json(result);
-        }
+        void write_json(json_t** result);
 
         static StatCollectorManager* get_global_ptr()
         {
@@ -39,8 +31,8 @@ class StatCollectorManager final {
         Database* m_db;
         boost::asio::io_service* m_io_service;
 
-        CachedStatCollectorMap* m_collectors;
-        CachedBanList* m_ban_list;
+        collector_map_t m_collectors;
+        doid_list_t m_ban_list;
 
     friend class CachedStatCollectorMap;
 };
