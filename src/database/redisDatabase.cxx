@@ -169,7 +169,7 @@ class RedisDatabase : public Database {
             time_t rawtime;
             time(&rawtime);
             strftime(timestamp, 64, "%d/%b/%Y:%H:%M:%S %z", localtime(&rawtime));
-            json_object_set_new(item, "date", json_string(timestamp));
+            json_object_set_new(item, "time", json_string(timestamp));
 
             char* data = json_dumps(item, 0);
             rdx.command<int>({"RPUSH", m_prefix + ":events", data});
