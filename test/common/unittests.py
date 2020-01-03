@@ -2,85 +2,115 @@ from tlopostats import Daemon
 
 import unittest
 import datetime
-import pymongo
 import socket
 import json
 import time
 
+import redis
+
 
 class StatsTest(unittest.TestCase):
     client = None
-    db = None
 
     @classmethod
     def setUpClass(cls):
-        cls.client = pymongo.MongoClient('127.0.0.1')
-        cls.db = cls.client[Daemon.DATABASE]
+        cls.client = redis.Redis()
         cls.resetDatabase()
 
     @classmethod
     def tearDownClass(cls):
         cls.resetDatabase()
         cls.client = None
-        cls.db = None
 
     @classmethod
     def resetDatabase(cls):
-        cls.client.drop_database(Daemon.DATABASE)
+        prefix = Daemon.DATABASE + ':*'
+        for key in cls.client.keys(prefix):
+            cls.client.delete(key)
 
     def expectStat(self, name, type, avId, expected):
         value = 0
 
         # Fetch events from queue:
-        for r in self.db.events.find({'key': avId, 'name': name, 'type': type}):
-            value += r['value']
-            self.db.events.remove({'_id': r['_id']})
+        ignored = []
+        while True:
+            data = self.client.lpop(Daemon.DATABASE + ':events')
+            if not data:
+                break
+
+            item = json.loads(data)
+            if item['key'] == avId and item['name'] == name and item['type'] == type:
+                value += item['value']
+
+            else:
+                ignored.append(data)
+
+        # Put ignored items back
+        for data in ignored:
+            self.client.rpush(Daemon.DATABASE + ':events', data)
+
+        self.assertEquals(value, expected)
+
+    def expectPeriodicStat(self, name, doId, expected):
+        value = 0
+
+        # Get the last event from queue:
+        ignored = []
+        while True:
+            data = self.client.lpop(Daemon.DATABASE + ':events')
+            if not data:
+                break
+
+            item = json.loads(data)
+            if item['key'] == doId and item['name'] == name:
+                # Most recent entry comes last
+                value = item['value']
+
+            else:
+                ignored.append(data)
+
+        # Put ignored items back
+        for data in ignored:
+            self.client.rpush(Daemon.DATABASE + ':events', data)
 
         self.assertEquals(value, expected)
 
     def expectDailyLeaderboard(self, name, avId, expectedRank, expectedValue):
-        value = 0
-        rank = 0
         datestr = datetime.datetime.now().strftime('%Y%b%d')
-        r = self.db[name][datestr].find_one({'_id': avId})
-        if r:
-            value = r['value']
-            rank = r['rank']
+        key = Daemon.DATABASE + ':' + name + ':' + datestr
+
+        rank = self.client.zrevrank(key, avId)
+        value = self.client.zscore(key, avId)
 
         self.assertEquals(rank, expectedRank)
         self.assertEquals(value, expectedValue)
 
     def expectMonthlyLeaderboard(self, name, avId, expectedRank, expectedValue):
-        value = 0
-        rank = 0
         datestr = datetime.datetime.now().strftime('%Y%b')
-        r = self.db[name][datestr].find_one({'_id': avId})
-        if r:
-            value = r['value']
-            rank = r['rank']
+        key = Daemon.DATABASE + ':' + name + ':' + datestr
+
+        rank = self.client.zrevrank(key, avId)
+        value = self.client.zscore(key, avId)
 
         self.assertEquals(rank, expectedRank)
         self.assertEquals(value, expectedValue)
 
     def expectYearlyLeaderboard(self, name, avId, expectedRank, expectedValue):
-        value = 0
-        rank = 0
         datestr = datetime.datetime.now().strftime('%Y')
-        r = self.db[name][datestr].find_one({'_id': avId})
-        if r:
-            value = r['value']
-            rank = r['rank']
+        key = Daemon.DATABASE + ':' + name + ':' + datestr
+
+        rank = self.client.zrevrank(key, avId)
+        value = self.client.zscore(key, avId)
 
         self.assertEquals(rank, expectedRank)
         self.assertEquals(value, expectedValue)
 
     def expectOverallLeaderboard(self, name, avId, expectedRank, expectedValue):
-        value = 0
-        rank = 0
-        r = self.db[name]['overall'].find_one({'_id': avId})
-        if r:
-            value = r['value']
-            rank = r['rank']
+        datestr = 'overall'
+        key = Daemon.DATABASE + ':' + name + ':' + datestr
+
+        rank = self.client.zrevrank(key, avId)
+        value = self.client.zscore(key, avId)
 
         self.assertEquals(rank, expectedRank)
         self.assertEquals(value, expectedValue)
@@ -90,20 +120,6 @@ class StatsTest(unittest.TestCase):
         self.expectMonthlyLeaderboard(name, avId, expectedRank, expectedValue)
         self.expectYearlyLeaderboard(name, avId, expectedRank, expectedValue)
         self.expectOverallLeaderboard(name, avId, expectedRank, expectedValue)
-
-    def expectPeriodicStat(self, name, doId, expected):
-        # Get the last event:
-        cursor = self.db.events.find({'key': doId, 'name': name}).sort('date', pymongo.DESCENDING)
-        try:
-            value = next(cursor)['value']
-
-        except StopIteration:
-            value = 0
-
-        # Remove events from event queue:
-        self.db.events.remove({'key': doId, 'name': name})
-
-        self.assertEquals(value, expected)
 
     def sendEvent(self, event, doIds=[], value=0):
         data = json.dumps({'event': event, 'doIds': doIds, 'value': value})

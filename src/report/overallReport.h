@@ -11,8 +11,4 @@ class OverallReport : public IncrementalPeriodicReport {
     protected:
         virtual unsigned int time_until_next_task();
         virtual void calc_period_string();
-        inline virtual int get_ld_flush_period()
-        {
-            return 3600 * 12; // 12 hours
-        }
 };

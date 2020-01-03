@@ -9,22 +9,14 @@ find_library(JANSSON_LIBRARY NAMES jansson)
 
 find_package_handle_standard_args(Jansson DEFAULT_MSG JANSSON_LIBRARY JANSSON_INCLUDE_DIR)
 
-# Find MongoDB
-find_path(MONGO_INCLUDE_DIR mongo/client/dbclient.h
-      /usr/include
-      /usr/local/include
-      /opt/local/include
+# Redox
+set (REDOX_LIBRARIES
+    redox_static
+    ev
+    hiredis
 )
 
-find_library(MONGO_LIBRARIES NAMES mongoclient libmongoclient
-    PATHS
-    /usr/lib
-    /usr/local/lib
-    /opt/local/lib
-)
-
-find_package_handle_standard_args(MongoDB DEFAULT_MSG MONGO_LIBRARIES MONGO_INCLUDE_DIR)
-
+# Boost
 find_package(Boost COMPONENTS system REQUIRED)
 
 set (SRC_FILES
@@ -49,17 +41,11 @@ set (SRC_FILES
     src/report/monthlyReport.cxx
     src/report/yearlyReport.cxx
     src/report/overallReport.cxx
-    src/database/cache.cxx
-    src/database/cachedDoIdMap.cxx
-    src/database/cachedStatCollectorMap.cxx
-    src/database/cachedBanList.cxx
     src/database/database.cxx
     src/database/dummyDatabase.cxx
-    src/database/mongoDatabase.cxx
-    src/database/leaderboard.cxx
+    src/database/redisDatabase.cxx
 )
 
-include_directories(${MONGO_INCLUDE_DIR})
 include_directories(${JANSSON_INCLUDE_DIR})
 include_directories(${PROJECT_SOURCE_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/src)
@@ -69,8 +55,8 @@ add_definitions("-pthread -std=c++11 -ggdb")
 add_executable(tlopostats ${SRC_FILES})
 target_link_libraries(tlopostats
     pthread
+    ${REDOX_LIBRARIES}
     ${JANSSON_LIBRARY}
-    ${MONGO_LIBRARIES}
     ${Boost_LIBRARIES}
 )
 
@@ -87,5 +73,4 @@ if(PYTHONINTERP_FOUND)
     add_test(av_mgr "${PYTHON2_EXECUTABLE}" "${CMAKE_SOURCE_DIR}/test/test_av_mgr.py")
     add_test(rpc "${PYTHON2_EXECUTABLE}" "${CMAKE_SOURCE_DIR}/test/test_rpc.py")
     add_test(collectors "${PYTHON2_EXECUTABLE}" "${CMAKE_SOURCE_DIR}/test/test_collectors.py")
-    add_test(leaderboards "${PYTHON2_EXECUTABLE}" "${CMAKE_SOURCE_DIR}/test/test_leaderboards.py")
 endif()
