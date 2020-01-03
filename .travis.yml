@@ -4,43 +4,9 @@ os: linux
 dist: trusty
 sudo: required
 
-compiler:
-    - clang
-    - gcc
-
 services:
-    - mongodb
-
-addons:
-  apt:
-    sources:
-        - mongodb-3.0-trusty
-        - llvm-toolchain-trusty-5.0
-        - ubuntu-toolchain-r-test
-    packages:
-        - cmake
-        - libboost-all-dev
-        - libjansson-dev
-        - mongodb-org-server
-        - clang-5.0
-        - g++-6
-        - gcc-6
-        - git
-
-before_install:
-- |
-  sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 100
-  sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 100
-  sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-5.0 100
-  sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-5.0 100
-
-install:
-- OLD_PWD=$PWD
-- cd ~/build && wget https://github.com/mongodb/mongo-c-driver/releases/download/1.1.10/mongo-c-driver-1.1.10.tar.gz && tar xzf mongo-c-driver-1.1.10.tar.gz && cd mongo-c-driver-1.1.10 && ./configure && make && sudo make install
-- cd ~/build && git clone https://github.com/mongodb/mongo-cxx-driver -b legacy && cd mongo-cxx-driver && sudo scons --disable-warnings-as-errors --sharedclient install && sudo cp -r build/install/* /usr/local
-- cd $OLD_PWD
+    - docker
+    - redis-server
 
 script:
-- mkdir -p build && cd build && cmake .. && make
-- sudo pip install pymongo
-- env CTEST_OUTPUT_ON_FAILURE=1 make test
+- cd build && ./test.sh rpc && ./test.sh collectors && ./test.sh av_mgr
