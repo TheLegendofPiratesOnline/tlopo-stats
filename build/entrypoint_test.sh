@@ -1,7 +1,7 @@
 #!/bin/sh
 
 cd /tmp
-wget https://bootstrap.pypa.io/get-pip.py
+wget https://bootstrap.pypa.io/2.7/get-pip.py
 python get-pip.py
 python -m pip install redis
 

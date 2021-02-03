@@ -14,13 +14,14 @@ Redox rdx;
 class RedisDatabase : public Database {
     public:
         RedisDatabase(const std::string& addr, int port,
-                      const std::string& prefix) : m_prefix(prefix)
+                      const std::string& prefix) : m_addr(addr),
+                        m_port(port), m_prefix(prefix)
         {
-            if (!rdx.connect(addr, port))
-            {
-                std::cerr << "unable to connect to Redis server" << std::endl;
-                exit(1);
-            }
+            connect_or_abort();
+        }
+
+        virtual ~RedisDatabase()
+        {
         }
 
         virtual void get_collectors(boost::asio::io_service& io_service, collector_map_t& map)
@@ -172,9 +173,7 @@ class RedisDatabase : public Database {
             json_object_set_new(item, "time", json_string(timestamp));
 
             char* data = json_dumps(item, 0);
-            rdx.command<int>({"RPUSH", m_prefix + ":events", data});
-            free(data);
-
+            add_entry(data);
             json_decref(item);
         }
 
@@ -182,16 +181,67 @@ class RedisDatabase : public Database {
                                             doid_t key,
                                             long value)
         {
-            rdx.command<std::string>({"ZINCRBY", m_prefix + ":" + collection,
-                                      std::to_string(value),
-                                      std::to_string(key)});
-        }
-
-        virtual ~RedisDatabase()
-        {
+            std::vector<std::string> cmd = {"ZINCRBY",
+                                            m_prefix + ":" + collection,
+                                            std::to_string(value),
+                                            std::to_string(key)};
+            add_incremental_report(cmd);
         }
 
     private:
+        void add_entry(char* data)
+        {
+            rdx.command<int>({"RPUSH", m_prefix + ":events", data}, [this, data](Command<int>& c) {
+                if (c.ok())
+                {
+                    free(data);
+                    return;
+                }
+
+                attempt_reconnect_or_abort();
+                add_entry(data);
+            });
+        }
+
+        void add_incremental_report(const std::vector<std::string>& cmd)
+        {
+            rdx.command<std::string>(cmd, [this, cmd](Command<std::string>& c) {
+                if (!c.ok())
+                {
+                    attempt_reconnect_or_abort();
+                    add_incremental_report(cmd);
+                }
+            });
+        }
+
+        void attempt_reconnect_or_abort(int max_attempts = 3)
+        {
+            for (int i = 1; i <= max_attempts; i++)
+            {
+                std::cerr << "attempting reconnection " << i << "/" << max_attempts << std::endl;
+                std::this_thread::sleep_for(std::chrono::seconds(1));
+                if (rdx.connect(m_addr, m_port))
+                {
+                    std::cerr << "reconnected" << std::endl;
+                    return;
+                }
+            }
+
+            std::cerr << "unable to reconnect to Redis server, giving up" << std::endl;
+            exit(1);
+        }
+
+        void connect_or_abort()
+        {
+            if (!rdx.connect(m_addr, m_port))
+            {
+                std::cerr << "unable to connect to Redis server" << std::endl;
+                exit(1);
+            }
+        }
+
+        std::string m_addr;
+        int m_port;
         std::string m_prefix;
 };
 
