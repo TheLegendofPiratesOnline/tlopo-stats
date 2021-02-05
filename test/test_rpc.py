@@ -49,7 +49,7 @@ class TestRPC(StatsTest):
         self.assertTrue(result['success'])
         self.assertEquals(result['result'],
                           {'enemies_killed':
-                                {'event': u'ENEMY_KILLED',
+                                {'event': 'ENEMY_KILLED',
                                  'name': 'enemies_killed',
                                  'type': 'incremental'}
                           })
@@ -86,7 +86,28 @@ class TestRPC(StatsTest):
                               {'event': 'SHARD_POP',
                                'name': 'shard_pop',
                                'period': 5,
-                               'type': u'periodic'}
+                               'type': 'periodic'}
+                          })
+
+        # Remove shard_pop:
+        result = self.doRPC('remove', name='shard_pop')
+        self.assertTrue(result['success'])
+
+        result = self.doRPC('list')
+        self.assertTrue(result['success'])
+        self.assertEquals(result['result'], {})
+
+        # Add a highscore collector:
+        result = self.doRPC('add_highscore', name='cd_wave', event='CD_WAVE')
+        self.assertTrue(result['success'])
+
+        result = self.doRPC('list')
+        self.assertTrue(result['success'])
+        self.assertEquals(result['result'],
+                          {'cd_wave':
+                              {'event': 'CD_WAVE',
+                               'name': 'cd_wave',
+                               'type': 'highscore'}
                           })
 
         # Cleanup:

@@ -2,6 +2,7 @@
 
 #include "collector/statCollector.h"
 #include "collector/incrementalStatCollector.h"
+#include "collector/highscoreCollector.h"
 #include "globals.h"
 
 StatCollectorManager::StatCollectorManager() : m_db(nullptr),
@@ -40,6 +41,20 @@ bool StatCollectorManager::add_periodic_collector(const std::string& name,
         return false;
 
     auto collector = new StatCollector(name, event, m_db, period, *m_io_service);
+    collector->start();
+
+    m_collectors[name] = collector;
+    m_db->add_collector(collector);
+    return true;
+}
+
+bool StatCollectorManager::add_highscore_collector(const std::string& name,
+                                                   const std::string& event)
+{
+    if (m_collectors.find(name) != m_collectors.end())
+        return false;
+
+    auto collector = new HighscoreCollector(name, event, m_db, *m_io_service);
     collector->start();
 
     m_collectors[name] = collector;

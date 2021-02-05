@@ -121,6 +121,11 @@ class StatsTest(unittest.TestCase):
         self.expectYearlyLeaderboard(name, avId, expectedRank, expectedValue)
         self.expectOverallLeaderboard(name, avId, expectedRank, expectedValue)
 
+    def expectHighscore(self, name, avId, expectedValue):
+        key = Daemon.DATABASE + ':avatar:' + name
+        value = int(self.client.zscore(key, avId))
+        self.assertEquals(value, expectedValue)
+
     def sendEvent(self, event, doIds=[], value=0):
         data = json.dumps({'event': event, 'doIds': doIds, 'value': value})
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # UDP

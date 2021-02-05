@@ -36,6 +36,11 @@ class Database {
         virtual void add_incremental_report(const std::string& collection,
                                             doid_t key,
                                             long value) = 0;
+        virtual void load_highscore_entries(const std::string& collection,
+                                            std::unordered_map<doid_t, long>& entries) = 0;
+        virtual void set_highscore_entry(const std::string& collection,
+                                         doid_t key,
+                                         long value) = 0;
 };
 
 Database* get_dummy_db();

@@ -2,6 +2,7 @@
 
 #include "collector/statCollector.h"
 #include "collector/incrementalStatCollector.h"
+#include "collector/highscoreCollector.h"
 
 #include <jansson.h>
 
@@ -54,6 +55,11 @@ class RedisDatabase : public Database {
                     else if (type == "incremental")
                     {
                         map[name] = new IncrementalStatCollector(name, event, this, io_service);
+                    }
+
+                    else if (type == "highscore")
+                    {
+                        map[name] = new HighscoreCollector(name, event, this, io_service);
                     }
 
                     else
@@ -188,6 +194,39 @@ class RedisDatabase : public Database {
             add_incremental_report(cmd);
         }
 
+        virtual void load_highscore_entries(const std::string& collection,
+                                            std::unordered_map<doid_t, long>& entries)
+        {
+            auto& c = rdx.commandSync<std::vector<std::string>>(
+                {"ZRANGE", m_prefix + ":avatar:" + collection, "0", "-1", "WITHSCORES"}
+            );
+
+            if (c.ok())
+            {
+                auto vec = c.reply();
+                auto it = vec.begin();
+                while (it != vec.end())
+                {
+                    doid_t k = atoi((*it++).c_str());
+                    long v = atol((*it++).c_str());
+                    entries[k] = v;
+                }
+            }
+
+            c.free();
+        }
+
+        virtual void set_highscore_entry(const std::string& collection,
+                                         doid_t key,
+                                         long value)
+        {
+            std::vector<std::string> cmd = {"ZADD",
+                                            m_prefix + ":avatar:" + collection,
+                                            std::to_string(value),
+                                            std::to_string(key)};
+            set_highscore_entry(cmd);
+        }
+
     private:
         void add_entry(char* data)
         {
@@ -210,6 +249,17 @@ class RedisDatabase : public Database {
                 {
                     attempt_reconnect_or_abort();
                     add_incremental_report(cmd);
+                }
+            });
+        }
+
+        void set_highscore_entry(const std::vector<std::string>& cmd)
+        {
+            rdx.command<long long int>(cmd, [this, cmd](Command<long long int>& c) {
+                if (!c.ok())
+                {
+                    attempt_reconnect_or_abort();
+                    set_highscore_entry(cmd);
                 }
             });
         }

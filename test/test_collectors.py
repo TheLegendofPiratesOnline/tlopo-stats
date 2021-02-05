@@ -118,6 +118,36 @@ class TestCollectors(StatsTest):
         d.stop()
         self.resetDatabase()
 
+    def test_highscore(self):
+        # Start the daemon:
+        d = Daemon()
+        d.start()
+
+        # Create a collector:
+        self.doRPC('add_highscore', name='cd_wave', event='CD_WAVE')
+
+        # Send an event:
+        self.sendEvent('CD_WAVE', [1234, 1235], 100)
+
+        # Check the DB:
+        self.expectHighscore('cd_wave', 1234, 100)
+        self.expectHighscore('cd_wave', 1235, 100)
+
+        # 1234 sets a new highscore:
+        self.sendEvent('CD_WAVE', [1234], 200)
+        self.expectHighscore('cd_wave', 1234, 200)
+
+        # Restart to ensure load_highscore_entries is working
+        d.restart()
+
+        # 1235 scores 40, but gets to keep 100 in the highscore:
+        self.sendEvent('CD_WAVE', [1235], 40)
+        self.expectHighscore('cd_wave', 1235, 100)
+
+        # Cleanup:
+        d.stop()
+        self.resetDatabase()
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -33,6 +33,7 @@ set (SRC_FILES
     src/collector/statCollectorBase.cxx
     src/collector/statCollector.cxx
     src/collector/incrementalStatCollector.cxx
+    src/collector/highscoreCollector.cxx
     src/collector/statCollectorManager.cxx
     src/report/report.cxx
     src/report/periodicReport.cxx
@@ -41,6 +42,7 @@ set (SRC_FILES
     src/report/monthlyReport.cxx
     src/report/yearlyReport.cxx
     src/report/overallReport.cxx
+    src/report/highscoreReport.cxx
     src/database/database.cxx
     src/database/dummyDatabase.cxx
     src/database/redisDatabase.cxx

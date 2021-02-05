@@ -149,6 +149,31 @@ void RPCConnection::handle_read(const boost::system::error_code& ec, size_t byte
         }
     }
 
+    else if (method == "add_highscore")
+    {
+        auto j_name = json_object_get(args, "name");
+        auto j_event = json_object_get(args, "event");
+
+        if (!j_name || !json_is_string(j_name))
+        {
+            error_str = "invalid or missing 'name' param";
+        }
+
+        else if (!j_event || !json_is_string(j_event))
+        {
+            error_str = "invalid or missing 'event' param";
+        }
+
+        else
+        {
+            std::string name = json_string_value(j_name);
+            std::string event = json_string_value(j_event);
+            success = StatCollectorManager::get_global_ptr()->add_highscore_collector(name, event);
+            if (!success)
+                error_str = name + " already exists";
+        }
+    }
+
     else if (method == "ban")
     {
         auto j_id = json_object_get(args, "id");

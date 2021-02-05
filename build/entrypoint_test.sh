@@ -1,11 +1,8 @@
 #!/bin/sh
 
-cd /tmp
-wget https://bootstrap.pypa.io/2.7/get-pip.py
-python get-pip.py
-python -m pip install redis
-
 cd /app/build
+python get-pip-27.py
+python -m pip install redis
 cmake -DCMAKE_BUILD_TYPE=Debug ..
 make -j4
 
