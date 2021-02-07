@@ -34,5 +34,9 @@ RUN git clone https://github.com/hmartiro/redox \
     && make \
     && make install
 
+COPY ./build/get-pip-27.py /tmp
+RUN python /tmp/get-pip-27.py && python -m pip install redis
+
 COPY . /app
 WORKDIR /app/build
+RUN cmake -DCMAKE_BUILD_TYPE=Debug .. && make -j

@@ -49,12 +49,13 @@ bool StatCollectorManager::add_periodic_collector(const std::string& name,
 }
 
 bool StatCollectorManager::add_highscore_collector(const std::string& name,
-                                                   const std::string& event)
+                                                   const std::string& event,
+                                                   bool reversed)
 {
     if (m_collectors.find(name) != m_collectors.end())
         return false;
 
-    auto collector = new HighscoreCollector(name, event, m_db, *m_io_service);
+    auto collector = new HighscoreCollector(name, event, m_db, reversed, *m_io_service);
     collector->start();
 
     m_collectors[name] = collector;

@@ -11,7 +11,8 @@ class StatCollectorManager final {
         bool add_incremental_collector(const std::string& name, const std::string& event);
         bool add_periodic_collector(const std::string& name, const std::string& event,
                                     unsigned int period);
-        bool add_highscore_collector(const std::string& name, const std::string& event);
+        bool add_highscore_collector(const std::string& name, const std::string& event,
+                                     bool reversed);
 
         bool remove_collector(const std::string& name);
 

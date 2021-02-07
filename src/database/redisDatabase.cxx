@@ -59,7 +59,8 @@ class RedisDatabase : public Database {
 
                     else if (type == "highscore")
                     {
-                        map[name] = new HighscoreCollector(name, event, this, io_service);
+                        bool reversed = json_is_true(json_object_get(value, "reversed"));
+                        map[name] = new HighscoreCollector(name, event, this, reversed, io_service);
                     }
 
                     else

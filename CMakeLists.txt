@@ -61,18 +61,3 @@ target_link_libraries(tlopostats
     ${JANSSON_LIBRARY}
     ${Boost_LIBRARIES}
 )
-
-# Test:
-find_package(PythonInterp)
-if(PYTHONINTERP_FOUND)
-    enable_testing()
-    if(PYTHON_VERSION_MAJOR EQUAL 2)
-        set(PYTHON2_EXECUTABLE "${PYTHON_EXECUTABLE}")
-    else()
-        set(PYTHON2_EXECUTABLE python2)
-    endif()
-
-    add_test(av_mgr "${PYTHON2_EXECUTABLE}" "${CMAKE_SOURCE_DIR}/test/test_av_mgr.py")
-    add_test(rpc "${PYTHON2_EXECUTABLE}" "${CMAKE_SOURCE_DIR}/test/test_rpc.py")
-    add_test(collectors "${PYTHON2_EXECUTABLE}" "${CMAKE_SOURCE_DIR}/test/test_collectors.py")
-endif()

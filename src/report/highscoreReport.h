@@ -4,8 +4,8 @@
 
 class HighscoreReport : public Report {
     public:
-        HighscoreReport(const std::string& name, Database* db,
-                        boost::asio::io_service& io_service);
+        HighscoreReport(const std::string& name, bool reversed,
+                        Database* db, boost::asio::io_service& io_service);
         virtual ~HighscoreReport();
 
         virtual void start();
@@ -14,4 +14,5 @@ class HighscoreReport : public Report {
 
     private:
         std::unordered_map<doid_t, long> m_entries;
+        bool m_reversed;
 };

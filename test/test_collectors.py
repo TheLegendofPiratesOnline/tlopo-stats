@@ -123,26 +123,36 @@ class TestCollectors(StatsTest):
         d = Daemon()
         d.start()
 
-        # Create a collector:
-        self.doRPC('add_highscore', name='cd_wave', event='CD_WAVE')
+        # Create two collectors:
+        self.doRPC('add_highscore', name='cd_wave', event='CD_WAVE', reversed=False)
+        self.doRPC('add_highscore', name='bp_time', event='BP_TIME', reversed=True)
 
-        # Send an event:
+        # Send events:
         self.sendEvent('CD_WAVE', [1234, 1235], 100)
+        self.sendEvent('BP_TIME', [1234], 50)
 
         # Check the DB:
         self.expectHighscore('cd_wave', 1234, 100)
         self.expectHighscore('cd_wave', 1235, 100)
+        self.expectHighscore('bp_time', 1234, 50)
 
         # 1234 sets a new highscore:
         self.sendEvent('CD_WAVE', [1234], 200)
         self.expectHighscore('cd_wave', 1234, 200)
 
+        self.sendEvent('BP_TIME', [1234], 40)
+        self.expectHighscore('bp_time', 1234, 40)
+
         # Restart to ensure load_highscore_entries is working
         d.restart()
 
-        # 1235 scores 40, but gets to keep 100 in the highscore:
+        # 1235 scores 40 in cd_wave, but gets to keep 100 in the highscore:
         self.sendEvent('CD_WAVE', [1235], 40)
         self.expectHighscore('cd_wave', 1235, 100)
+
+        # 1234 scores 80 in bp_time, but gets to keep 40 in the highscore:
+        self.sendEvent('BP_TIME', [1234], 80)
+        self.expectHighscore('bp_time', 1234, 40)
 
         # Cleanup:
         d.stop()

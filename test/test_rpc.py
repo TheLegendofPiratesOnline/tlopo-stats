@@ -97,8 +97,11 @@ class TestRPC(StatsTest):
         self.assertTrue(result['success'])
         self.assertEquals(result['result'], {})
 
-        # Add a highscore collector:
-        result = self.doRPC('add_highscore', name='cd_wave', event='CD_WAVE')
+        # Add highscore collectors:
+        result = self.doRPC('add_highscore', name='cd_wave', event='CD_WAVE', reversed=False)
+        self.assertTrue(result['success'])
+
+        result = self.doRPC('add_highscore', name='bp_time', event='BP_TIME', reversed=True)
         self.assertTrue(result['success'])
 
         result = self.doRPC('list')
@@ -107,6 +110,12 @@ class TestRPC(StatsTest):
                           {'cd_wave':
                               {'event': 'CD_WAVE',
                                'name': 'cd_wave',
+                               'reversed': False,
+                               'type': 'highscore'},
+                           'bp_time':
+                              {'event': 'BP_TIME',
+                               'name': 'bp_time',
+                               'reversed': True,
                                'type': 'highscore'}
                           })
 

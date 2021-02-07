@@ -10,8 +10,11 @@ class HighscoreCollector : public StatCollectorBase
 {
     public:
         HighscoreCollector(const std::string& name, const std::string& event,
-                           Database* db, boost::asio::io_service& io_service);
+                           Database* db, bool reversed,
+                           boost::asio::io_service& io_service);
         virtual ~HighscoreCollector();
+
+        virtual void write_json(json_t* object);
 
     protected:
         virtual void callback(const Event& e);
@@ -20,4 +23,5 @@ class HighscoreCollector : public StatCollectorBase
 
     private:
         HighscoreReport* m_report;
+        bool m_reversed;
 };

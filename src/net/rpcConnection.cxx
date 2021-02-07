@@ -153,6 +153,7 @@ void RPCConnection::handle_read(const boost::system::error_code& ec, size_t byte
     {
         auto j_name = json_object_get(args, "name");
         auto j_event = json_object_get(args, "event");
+        auto j_reversed = json_object_get(args, "reversed");
 
         if (!j_name || !json_is_string(j_name))
         {
@@ -164,11 +165,17 @@ void RPCConnection::handle_read(const boost::system::error_code& ec, size_t byte
             error_str = "invalid or missing 'event' param";
         }
 
+        else if (!j_reversed || !json_is_boolean(j_reversed))
+        {
+            error_str = "invalid or missing 'reversed' param";
+        }
+
         else
         {
             std::string name = json_string_value(j_name);
             std::string event = json_string_value(j_event);
-            success = StatCollectorManager::get_global_ptr()->add_highscore_collector(name, event);
+            bool reversed = json_is_true(j_reversed);
+            success = StatCollectorManager::get_global_ptr()->add_highscore_collector(name, event, reversed);
             if (!success)
                 error_str = name + " already exists";
         }
