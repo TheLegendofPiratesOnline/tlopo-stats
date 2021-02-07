@@ -31,7 +31,7 @@ RUN git clone https://github.com/hmartiro/redox \
     && mkdir build \
     && cd build \
     && cmake -Dlib=off -Dstatic_lib=on .. \
-    && make \
+    && make -j \
     && make install
 
 COPY ./build/get-pip-27.py /tmp
