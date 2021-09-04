@@ -7,3 +7,5 @@ build/
 *.exe
 *.exp
 *.lib
+
+.DS_Store
