@@ -39,4 +39,5 @@ RUN python /tmp/get-pip-27.py && python -m pip install redis
 
 COPY . /app
 WORKDIR /app/build
-RUN cmake -DCMAKE_BUILD_TYPE=Debug .. && make -j
+
+RUN cmake -DCMAKE_BUILD_TYPE=Debug .. && make -j 4
